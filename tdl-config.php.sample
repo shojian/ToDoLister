@@ -1,0 +1,12 @@
+<?php
+/*
+ *  Config file for the ToDoLister app.
+ */
+
+
+define("TDL_DBURI", "localhost");
+define("TDL_DBNAME", "some name");
+define("TDL_DBUSER", "some user");
+define("TDL_DBPASS", "some passwd");
+
+?>
