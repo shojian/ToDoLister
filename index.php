@@ -3,6 +3,7 @@
  *  Index file for ToDoLister
  */
 session_start();
+ob_start();
 require_once('tdl-config.php');
 require_once("tdl-header.php");
 $requiresLogin = true;
@@ -36,4 +37,5 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
 	$mysqli->close();
 }
 require_once("tdl-footer.php");
+ob_end_flush();
 ?>
