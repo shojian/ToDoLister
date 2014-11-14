@@ -19,10 +19,16 @@ if ($stmt = $mysqli->prepare("SELECT * FROM TASKS WHERE deadline<=?")) {
 		$stmt->bind_param('i', $deadline);
 		$stmt->execute();
 		$stmt->bind_result($id, $name, $project, $labels, $deadline);
-		
+		?>
+		<div class="flex-parent" id="task-list">
+		<?php
 		while ($stmt->fetch()) : ?>
-			
-		<? endwhile;
+			<div class="task-item">
+				
+			</div>
+		<? endwhile; ?>
+		</div>
+		<?php
 		$stmt->close();
 	}
 	
