@@ -64,9 +64,18 @@
 		}
 		?>		
 	</div> <?php
-	/* 
-	End of menu part
-	Start of  the task listing */
+	/* End of menu part */
+	/* Add new task start */ ?>
+	<div class="flex-child" id="add-new-task">
+		<form action="tdl-processTasks.php?add" method="post">
+			<input type="text" name="task" />
+			<input type="date" name="deadline" />
+			<input type="submit" value="Add new task" />
+		</form>
+	</div>
+	<?php
+	/* Add new task end */
+	/* Start of  the task listing */
 $tomorrow = getdate(time() + (24*60*60)); 
 $dst = -1;
 if (date('I', time())) {    
