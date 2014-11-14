@@ -2,6 +2,20 @@
 	/*
 	 *  Task list file. Shows tasks.
 	 */
+?>	
+<div class="flex-parent"> 
+	<div class="flex-child flex-parent" id="meta-info">
+		<div class="flex-child" id="time-list">
+		
+		</div>
+		<div class="flex-child" id="projects-list">
+		
+		</div>
+		<div class="flex-child" id="labels-list">
+		
+		</div>		
+	</div>
+<?php	 
 $tomorrow = getdate(time() + (24*60*60)); 
 $dst = -1;
 if (date('I', time())) {    
@@ -20,16 +34,18 @@ if ($stmt = $mysqli->prepare("SELECT * FROM TASKS WHERE deadline<=?")) {
 		$stmt->execute();
 		$stmt->bind_result($id, $name, $project, $labels, $deadline);
 		?>
-		<div class="flex-parent" id="task-list">
+		<div class="flex-parent flex-child" id="task-list">
 		<?php
 		while ($stmt->fetch()) : ?>
-			<div class="task-item">
-				
+			<div class="task-item flex-child">
+				<div class="flex-child done-mark"><input type="checkbox" name="task-no[<?php echo $id; ?>]" /></div>
+				<div class="flex-child name-info"><?php echo $name; ?></div>
+				<div class="flex-child meta-info"><?php echo $project." ".$labels; ?></div>
+				<div class="flex-child deadline"><?php echo $deadline; /*To be formatted properly*/?></div>
 			</div>
 		<? endwhile; ?>
 		</div>
 		<?php
 		$stmt->close();
-	}
-	
-?>
+	}	?>
+</div>
