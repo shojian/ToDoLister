@@ -55,7 +55,7 @@
 		<div class="flex-child" id="labels-list">
 			<ul>
 				<?php while ($stmt->fetch()) :?>
-				<li><a href="?project=<?php echo $label ?>"><?php echo $label ?></a></li>
+				<li><a href="?label=<?php echo $label ?>"><?php echo $label ?></a></li>
 				<?php endwhile; ?>
 			</ul>
 		</div>
@@ -75,12 +75,24 @@ if (date('I', time())) {
 	$dst = 0;
 }
 $deadline = mktime(0, 0, 0, $tomorrow["mon"], $tomorrow["mday"], $tomorrow["year"], $dst);
-if (isset($_GET["deadline"]))
-	$deadline = $_GET["deadline"];
+$queryMode;
+$query = "SELECT * FROM TASKS WHERE deadline<=?";
+if (!isset($_GET["deadline"]) && isset($_GET["label"]) && !isset($_GET["project"])) {
+	$query = "SELECT * FROM TASKS WHERE labels<=?";
+	$queryMode = "label";
+} else if (!isset($_GET["deadline"]) && !isset($_GET["label"]) && isset($_GET["project"])) {
+	$query = "SELECT * FROM TASKS WHERE project<=?";
+	$queryMode = "project";
+} else {
+	if (isset($_GET["deadline"])) {		
+		$deadline = $_GET["deadline"];
+		$queryMode = "deadline";
+	}
+}
 	/* Sigh, at the moment only single user. Have to think how to scale it to
 	   multi user environment. Certainly a To Do. Having tasks for users would be
 	   messy and slow. */
-if ($stmt = $mysqli->prepare("SELECT * FROM TASKS WHERE deadline<=?")) {
+if ($stmt = $mysqli->prepare($query)) {
 		$stmt->bind_param('i', $deadline);
 		$stmt->execute();
 		$stmt->bind_result($id, $name, $project, $labels, $deadline);
