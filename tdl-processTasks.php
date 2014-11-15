@@ -31,8 +31,10 @@ if (isset($_GET["add"]) {
 	}
 	$preparedLabels = implode(",", $labels);	
 	/*
-	 *  process deadline, think about date format, user spefic or system wide?
+	 *  dd. mm. yyyy
 	 */
+	$dlPrep = strptime($_POST["deadline"], '%e. %m. %Y');
+	$deadline = mktime(0, 0, 0, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline) VALUES (?, ?, ?, ?)")) {
 		$stmt->bind_param("sssi", $taskName, $project, $labels, $deadline);
 		$stmt->execute();

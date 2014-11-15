@@ -69,7 +69,7 @@
 	<div class="flex-child" id="add-new-task">
 		<form action="tdl-processTasks.php?add" method="post">
 			<input type="text" name="task" />
-			<input type="date" name="deadline" />
+			<input type="date" name="deadline" placeholder="dd. mm. yyyy"/>
 			<input type="submit" value="Add new task" />
 		</form>
 	</div>
