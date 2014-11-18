@@ -32,10 +32,12 @@ if (isset($_GET["add"])) {
 	}
 	$preparedLabels = implode(",", $labels);	
 	/*
+	 * 	Rewrite following section!!!
 	 *  dd. mm. yyyy
 	 */
 	$dlPrep = strptime($_POST["deadline"], '%e. %m. %Y');
 	$deadline = mktime(0, 0, 0, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+	// Needs to parse if it is repeatable deadline or once in a lifetime
 	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline) VALUES (?, ?, ?, ?)")) {
 		$stmt->bind_param("sssi", $taskName, $project, $labels, $deadline);
 		$stmt->execute();
@@ -44,11 +46,21 @@ if (isset($_GET["add"])) {
 	
 }
 
-if (isset($_GET["done"])) {
-	/*
-	 *  Transfer from To Be Done to Done table
-	 *  Optionally renewing task
-	 */
+if (isset($_GET["done"]) && isset($_POST["toBeRemoved"])) {	 
+	 // Get info about task from TASKS table
+	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels FROM TASKS WHERE id=?;") {
+	 	$stmt->bind_param("i", $_POST["toBeRemoved"]);
+	 	$stmt->execute();
+		$stmt->bind_result($id, $name, $project, $labels);
+	 // Add info to Done table
+	 	 
+	 // If non-renewable remove task from TASKS table
+	 
+	 // otherwise renew task in TASKS table
+	 } else {
+	 	// Throw some error
+	 }
+	 
 }
 
 if (isset($_GET["remove"]) && isset($_POST["toBeRemoved"])) {
