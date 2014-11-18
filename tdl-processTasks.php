@@ -13,7 +13,7 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
     	exit();
 	}
 
-if (isset($_GET["add"]) {
+if (isset($_GET["add"])) {
 	$toProcess = explode(" ",$_POST["task"]);
 	$project = "";
 	$labels = [];
@@ -41,5 +41,16 @@ if (isset($_GET["add"]) {
 		$stmt->close();
 	}
 	
+}
+
+if (isset($_GET["done"])) {
+	/*
+	 *  Transfer from To Be Done to Done table
+	 *  Optionally 
+	 */
+}
+
+if (isset($_GET["remove"]) && isset($_POST["id"])) {
+
 }
 ?>
