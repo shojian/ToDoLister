@@ -26,10 +26,10 @@ Deadline styles
 
 ### Repeatable tasks
 
-- every day
-- every Mon
-- every Monday
-
-- ev day
-- ev Mon
-- ev Monday
+- ev(ery) day
+- ev(ery) Mon(day) (@ 6:00)
+- ev day (@ 6:00)
+- ev(ery) other day (@ 6:00)
+- ev(ery) 3 days (@ 6:00)
+- ev(ery) 25 (@ 6:00)
+- - this means every 25th day of the month. If month has no such day this task will not be performed that month
