@@ -26,10 +26,11 @@ Deadline styles
 
 ### Repeatable tasks
 
-- ev(ery) day
+- ev(ery) day (@ 6:00)
 - ev(ery) Mon(day) (@ 6:00)
-- ev day (@ 6:00)
 - ev(ery) other day (@ 6:00)
+- ev(ery) odd/even day (@ 6:00)
+ * 1 January is odd day, 2 January is even 
 - ev(ery) 3 days (@ 6:00)
 - ev(ery) 25 (@ 6:00)
  * this means every 25th day of the month. If month has no such day this task will not be performed that month
