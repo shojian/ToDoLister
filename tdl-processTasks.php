@@ -59,6 +59,7 @@ if (isset($_GET["done"]) && isset($_POST["toBeRemoved"])) {
 	 // otherwise renew task in TASKS table
 	 } else {
 	 	// Throw some error
+	 	
 	 }
 	 
 }
