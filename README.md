@@ -11,9 +11,13 @@ Deadline styles
 ### Date based formatting
 
 19&#46; 11&#46; 2014
+
 19&#46; 11&#46; 14
+
 19 Nov 2014
+
 19 November 2014
+
 11/19/14
 
 6:00 19. 11. 2014
