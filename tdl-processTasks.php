@@ -4,6 +4,7 @@
 	 */
 session_start();
 require_once('tdl-config.php');
+require_once('tdl-deadline.php');
 
 $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	
@@ -31,15 +32,13 @@ if (isset($_GET["add"])) {
 		}
 	}
 	$preparedLabels = implode(",", $labels);	
+	$deadline = new TDLDeadline($_POST["deadline"]);
 	/*
-	 * 	Rewrite following section!!!
-	 *  dd. mm. yyyy
-	 */
 	$dlPrep = strptime($_POST["deadline"], '%e. %m. %Y');
-	$deadline = mktime(0, 0, 0, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+	$deadline = mktime(0, 0, 0, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);*/
 	// Needs to parse if it is repeatable deadline or once in a lifetime
-	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline) VALUES (?, ?, ?, ?)")) {
-		$stmt->bind_param("sssi", $taskName, $project, $labels, $deadline);
+	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline, repeat) VALUES (?, ?, ?, ?, ?)")) {
+		$stmt->bind_param("sssis", $taskName, $project, $labels, $deadline->getDeadline(), $deadline->getRepeat());
 		$stmt->execute();
 		$stmt->close();
 	}

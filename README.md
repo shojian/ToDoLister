@@ -29,7 +29,6 @@ Deadline styles
 - every day
 - every Mon
 - every Monday
-
 - ev day
 - ev Mon
 - ev Monday
