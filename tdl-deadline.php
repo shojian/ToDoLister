@@ -4,7 +4,7 @@
 	 */
 	 class TDLDeadline {
 	 	private $deadline;
-	 	private $repeat;
+	 	private $repeat = "";
 	 
 	 	function __construct($rawDeadline) {
 	 		if (preg_match('/\d\d?\:\d\d \d\d? [[:alpha:]]* \d\d\d?\d?/', $rawDeadline)) {
@@ -56,10 +56,6 @@
 	 	
 	 	private function namedMonth($str, $time=false) {
 	 		$pieces = explode(" ", $str);
-	 		$deadline = 0;	 		
-	 		/*
-	$dlPrep = strptime($_POST["deadline"], '%e. %m. %Y');
-	$deadline = mktime(0, 0, 0, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);*/
 	 		if ($time) {
 	 			$dlPrep;
 	 			if (strlen($pieces[2]) == 3) {
@@ -77,10 +73,6 @@
 	 			}
 	 			$this->deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
-	 	}
-	 	
-	 	private function resolveTime($str) {
-	 		
 	 	}
 	 }
 ?>
