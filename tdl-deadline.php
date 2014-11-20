@@ -65,11 +65,17 @@
 	 			if (strlen($pieces[2]) == 3) {
 	 				$dlPrep = strptime($str, "%k:%M %e %b %Y");
 	 			} else {
-	 				$dlPrep = strptime($str, "%k:%M %e %b %Y");
+	 				$dlPrep = strptime($str, "%k:%M %e %B %Y");
 	 			}
-	 			resolveTime($deadline - (24*60*60));
+	 			$this->deadline = mktime(0, $dlPrep['tm_min'], $dlPrep['tm_hour'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
-	 		
+	 			$dlPrep;
+	 			if (strlen($pieces[2]) == 3) {
+	 				$dlPrep = strptime($str, "%e %b %Y");
+	 			} else {
+	 				$dlPrep = strptime($str, "%e %B %Y");
+	 			}
+	 			$this->deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
 	 	}
 	 	
