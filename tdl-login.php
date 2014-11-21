@@ -13,7 +13,7 @@
 					<label for="password">Password: (required)</label>
 					<input type="password" name="password" />
 				</div>
-				<input type="hidden" value="<?php echo SID; ?>" />
+				<input type="hidden" name="lock" value="<?php echo SID; ?>" />
 				<input type="text" class="hidden" name="botBlocker" />
 				<div class="inputHolder">
 					<input type="submit" name="username" />
