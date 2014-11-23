@@ -18,13 +18,13 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
     	exit();
 	}
 	/* create a prepared statement */
-	if ($stmt = $mysqli->prepare("SELECT username FROM USERS WHERE username=? AND sessID=?")) {
-		$stmt->bind_param('ss', $_COOKIE["userData"]["username"], SID);
+	if ($stmt = $mysqli->prepare("SELECT username FROM USERS WHERE username=?")) {
+		$stmt->bind_param('s', $_COOKIE["userData"]);
 		$stmt->execute();
 		$stmt->bind_result($user);
 		while ($stmt->fetch()) {
 			if (!empty($user)) {
-				$requiresLogin = true;	
+				$requiresLogin = true;
 			}
 		}
 		$stmt->close();

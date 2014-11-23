@@ -37,7 +37,7 @@
 			<?php while ($stmt->fetch()) :?>
 				<?php 
 					$projectArr = explode(",", $projects);
-					for ($i = 0; $i < count($projectArr); i++):
+					for ($i = 0; $i < count($projectArr); $i++):
 				 ?>
 				<li><a href="?project=<?php echo $projectArr[$i]; ?>"><?php echo $projectArr[$i]; ?></a></li>
 			<?php 
