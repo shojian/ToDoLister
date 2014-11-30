@@ -34,6 +34,7 @@ if (isset($_GET["add"])) {
 	$preparedLabels = implode(",", $labels);	
 	$deadline = new TDLDeadline($_POST["deadline"]);
 	// Needs to parse if it is repeatable deadline or once in a lifetime
+	// ToDo query db for user's todo table
 	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline, repeat) VALUES (?, ?, ?, ?, ?)")) {
 		$stmt->bind_param("sssis", $taskName, $project, $labels, $deadline->getDeadline(), $deadline->getRepeat());
 		$stmt->execute();

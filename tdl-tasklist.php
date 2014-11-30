@@ -66,6 +66,9 @@
 		?>		
 	</div> <?php
 	/* End of menu part */
+	?>
+	<div class="flex-child flex-parent flex-column">
+	<?php
 	/* Add new task start */ ?>
 	<div class="flex-child" id="add-new-task">
 		<form action="tdl-processTasks.php?add" method="post">
@@ -86,12 +89,12 @@ if (date('I', time())) {
 }
 $deadline = mktime(0, 0, 0, $tomorrow["mon"], $tomorrow["mday"], $tomorrow["year"], $dst);
 $queryMode;
-$query = "SELECT * FROM TASKS WHERE deadline<=?";
+$query = "SELECT id,name,project,labels,deadline FROM TASKS WHERE deadline<=?";
 if (!isset($_GET["deadline"]) && isset($_GET["label"]) && !isset($_GET["project"])) {
-	$query = "SELECT * FROM TASKS WHERE labels<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM TASKS WHERE labels<=?";
 	$queryMode = "label";
 } else if (!isset($_GET["deadline"]) && !isset($_GET["label"]) && isset($_GET["project"])) {
-	$query = "SELECT * FROM TASKS WHERE project<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM TASKS WHERE project<=?";
 	$queryMode = "project";
 } else {
 	if (isset($_GET["deadline"])) {		
@@ -121,4 +124,5 @@ if ($stmt = $mysqli->prepare($query)) {
 		<?php
 		$stmt->close();
 	}	?>
+	</div>
 </div>

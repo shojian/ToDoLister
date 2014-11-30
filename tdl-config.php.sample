@@ -8,5 +8,6 @@ define("TDL_DBURI", "localhost");
 define("TDL_DBNAME", "some name");
 define("TDL_DBUSER", "some user");
 define("TDL_DBPASS", "some passwd");
+define("TDL_PATH", "some path");
 
 ?>

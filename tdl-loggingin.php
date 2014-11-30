@@ -17,8 +17,8 @@
 				if (password_verify($_POST["password"], $password)) {
 					// mental note: look into PHP security more deeply
 					setcookie('userData', $user, time()+(30*60));
-					$_SESSION["username"] = $user;
-					header("Location: http://".$_SERVER['SERVER_NAME'].":8888");
+					$_SESSION["username"] = $user;					
+					header("Location: ".TDL_PATH);
 				} else {
 					echo "not logged in";
 				}
