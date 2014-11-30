@@ -6,10 +6,10 @@
 	 
 	 /* Start menu */
 ?>	
-<div class="flex-parent"> 	
+<div class="flex-parent main"> 	
 	<div class="flex-child flex-parent flex-column" id="meta-info">
 		<h1 class="flex-child">To Do Lister</h1>
-		<div class="flex-child" id="time-list">
+		<div class="flex-child time-list" id="time-list">
 			<ul> <?php // *sigh* verbal stuff here to be redone 
 				$tomorrow = getdate(time() + (24*60*60)); 
 				$weekLater = getdate(time() + (7*24*60*60) + (24*60*60));

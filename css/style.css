@@ -12,6 +12,12 @@
 }
 body {
 	font-family: Merriweather;
+	color: #333;
+	background: #fdfdfd;
+}
+
+.main {
+	min-height: calc(100vh - 100px);
 }
 
 .flex-parent { 
@@ -21,12 +27,26 @@ body {
 	flex-flow: row wrap; 
 } 
 
+
 .flex-child { 
-	-webkit-flex: 1 0 auto; 
-	flex: 1 0 auto; 
+	-webkit-flex: initial; 
+	flex: initial; 
 }
 
 .flex-column {
 	-webkit-flex-flow: column wrap; 
 	flex-flow: column wrap; 
+}
+
+.time-list ul {
+	list-style: none;;
+}
+
+a, a:active, a:visited, a:link {
+	text-decoration: none;
+	color: #333;
+}
+
+footer {
+	height: 100px;
 }
