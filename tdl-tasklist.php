@@ -67,7 +67,7 @@
 	</div> <?php
 	/* End of menu part */
 	?>
-	<div class="flex-child flex-parent flex-column">
+	<div id="tasks" class="flex-child flex-parent flex-column">
 	<?php
 	/* Add new task start */ ?>
 	<div class="flex-child" id="add-new-task">
@@ -110,13 +110,15 @@ if ($stmt = $mysqli->prepare($query)) {
 		$stmt->execute();
 		$stmt->bind_result($id, $name, $project, $labels, $deadline);
 		?>
-		<div class="flex-parent flex-child" id="task-list">
+		<div class="flex-parent flex-child flex-column" id="task-list">
 		<?php
 		while ($stmt->fetch()) : ?>
-			<div class="task-item flex-child">
+			<div class="task-item flex-child flex-parent">
 				<div class="flex-child done-mark"><input type="checkbox" name="task-no[<?php echo $id; ?>]" /></div>
-				<div class="flex-child name-info"><?php echo $name; ?></div>
-				<div class="flex-child meta-info"><?php echo $project." ".$labels; ?></div>
+				<div class="flex-child flex-parent flex-column">
+					<div class="flex-child name-info"><?php echo $name; ?></div>
+					<div class="flex-child meta-info"><?php echo $project." ".$labels; ?></div>
+				</div>
 				<div class="flex-child deadline"><?php echo $deadline; /*To be formatted properly*/?></div>
 			</div>
 		<? endwhile; ?>
