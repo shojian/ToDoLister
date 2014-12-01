@@ -119,7 +119,7 @@ if ($stmt = $mysqli->prepare($query)) {
 					<div class="flex-child name-info"><?php echo $name; ?></div>
 					<div class="flex-child meta-info"><?php echo $project." ".$labels; ?></div>
 				</div>
-				<div class="flex-child deadline"><?php echo date("j. m. Y", $deadline); /*To be formatted properly*/?></div>
+				<div class="flex-child deadline"><?php echo date("j. m. Y", $deadline-1);?></div>
 			</div>
 		<? endwhile; ?>
 		</div>
