@@ -55,6 +55,10 @@ a, a:active, a:visited, a:link {
 	color: #333;
 }
 
+.task-item {
+	overflow: hidden;
+}
+
 #meta-info {
 	margin: 0 2em 2em;
 }
@@ -72,6 +76,10 @@ a, a:active, a:visited, a:link {
 	color: #111;
 }
 
+.deadline {
+	float: right;;
+}
+
 .overdue {
 	color: #e00;
 }
@@ -85,4 +93,5 @@ footer {
 	height: 100px;
 	margin: 0 auto;
 	width: 70vw;
+	text-align: center;
 }

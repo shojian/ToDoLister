@@ -120,7 +120,7 @@ if ($stmt = $mysqli->prepare($query)) {
 					<div class="flex-child meta-info"><?php echo $project." ".$labels; ?></div>
 				</div>
 				<?php if ($deadline < time()) : ?>
-				<div class="flex-child deadline overdue">
+				<div class="deadline overdue">
 				<?php endif; 
 				if (date("G:i", $deadline) == "0:00")			
 					echo date("j. m. Y", $deadline-1);
