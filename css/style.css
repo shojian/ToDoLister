@@ -6,6 +6,12 @@
 }
 @font-face {
   font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Merriweather Italic'), local('Merriweather-Italic'), url(http://fonts.gstatic.com/s/merriweather/v8/So5lHxHT37p2SS4-t60SlL52ooqJRs02xO3mONBoqeI.woff) format('woff');
+}
+@font-face {
+  font-family: 'Merriweather';
   font-style: normal;
   font-weight: 700;
   src: local('Merriweather Bold'), local('Merriweather-Bold'), url(http://fonts.gstatic.com/s/merriweather/v8/ZvcMqxEwPfh2qDWBPxn6nhAPw1J91axKNXP_-QX9CC8.woff) format('woff');
@@ -64,6 +70,10 @@ a, a:active, a:visited, a:link {
 .meta-info {
 	font-style: italic;
 	color: #111;
+}
+
+.overdue {
+	color: #e00;
 }
 
 .text-info {
