@@ -89,12 +89,12 @@ if (date('I', time())) {
 }
 $deadline = mktime(0, 0, 0, $tomorrow["mon"], $tomorrow["mday"], $tomorrow["year"], $dst);
 $queryMode;
-$query = "SELECT id,name,project,labels,deadline FROM TASKS WHERE deadline<=?";
+$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_TASKS WHERE deadline<=?";
 if (!isset($_GET["deadline"]) && isset($_GET["label"]) && !isset($_GET["project"])) {
-	$query = "SELECT id,name,project,labels,deadline FROM TASKS WHERE labels<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_TASKS WHERE labels<=?";
 	$queryMode = "label";
 } else if (!isset($_GET["deadline"]) && !isset($_GET["label"]) && isset($_GET["project"])) {
-	$query = "SELECT id,name,project,labels,deadline FROM TASKS WHERE project<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_TASKS WHERE project<=?";
 	$queryMode = "project";
 } else {
 	if (isset($_GET["deadline"])) {		
