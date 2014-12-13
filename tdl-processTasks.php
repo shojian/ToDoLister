@@ -32,7 +32,8 @@ if (isset($_GET["add"])) {
 		}
 	}
 	$preparedLabels = implode(",", $labels);	
-	$deadline = new TDLDeadline($_POST["deadline"]);
+	$deadline = new TDLDeadline();
+	$deadline::fromForm($_POST["deadline"]);
 	// Needs to parse if it is repeatable deadline or once in a lifetime
 	// ToDo query db for user's todo table
 	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline, repeat) VALUES (?, ?, ?, ?, ?)")) {
@@ -45,10 +46,10 @@ if (isset($_GET["add"])) {
 
 if (isset($_GET["done"]) && isset($_POST["toBeRemoved"])) {	 
 	 // Get info about task from TASKS table
-	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels FROM TASKS WHERE id=?;") {
+	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels, repeat FROM TASKS WHERE id=?;") {
 	 	$stmt->bind_param("i", $_POST["toBeRemoved"]);
 	 	$stmt->execute();
-		$stmt->bind_result($id, $name, $project, $labels);
+		$stmt->bind_result($id, $name, $project, $labels, $repeat);
 	 // Add info to Done table
 	 	 
 	 // If non-renewable remove task from TASKS table

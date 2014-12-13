@@ -6,7 +6,11 @@
 	 	private $deadline;
 	 	private $repeat = "";
 	 
-	 	function __construct($rawDeadline) {
+	 	function __construct() {
+	 		$deadline = 0;
+	 	}
+	 	
+	 	public static function fromForm($rawDeadLine) {
 	 		if (preg_match('/\d\d?\:\d\d \d\d? [[:alpha:]]* \d\d\d?\d?/', $rawDeadline)) {
 	 		// 6:00 19 November 1989
 	 			namedMonth($rawDeadline, true);	
@@ -44,6 +48,10 @@
 	 		// every 25
 	 		
 	 		}
+	 	}
+	 	
+	 	public static function fromRepeat($repeat) {
+	 	
 	 	}
 	 	
 	 	public function getDeadline() {
