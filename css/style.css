@@ -107,3 +107,12 @@ input['type=submit'] {
 	font-size: 16px;
 	color: white;
 }
+
+.loginFormHolder {
+	margin: 0 auto;
+	width: 214px;
+	position: relative;
+  	-webkit-transform: translateY(75%);
+	-ms-transform: translateY(75%);
+	transform: translateY(75%);
+}

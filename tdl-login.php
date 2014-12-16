@@ -1,4 +1,5 @@
-		<div id="loginFormHolder">
+		<div class="main">
+		<div id="loginFormHolder" class="loginFormHolder">
 		<?php if (isset($_GET["err"])) : ?>
 			<div class="error">
 				Username or password are incorrect.
@@ -19,4 +20,5 @@
 					<input type="submit" />
 				</div>
 			</form>
+		</div>
 		</div>
