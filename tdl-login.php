@@ -17,7 +17,7 @@
 				<input type="hidden" name="lock" value="<?php echo SID; ?>" />
 				<input type="text" class="hidden" name="botBlocker" />
 				<div class="inputHolder">
-					<input type="submit" />
+					<input type="submit" value="Log in" />
 				</div>
 			</form>
 		</div>
