@@ -13,8 +13,11 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
     	redirectError("conn");
 	}
 $getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
+$toBeRemoved = filter_input(INPUT_POST, "toBeRemoved", FILTER_SANITIZE_STRING);
+if ($toBeRemoved == null)
+	$toBeRemoved = false;
 if ($getAction == "add") {
-	$toProcess = explode(" ",$_POST["task"]);
+	$toProcess = explode(" ",filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING));
 	$project = "";
 	$labels = [];
 	$taskName = "";
@@ -32,7 +35,7 @@ if ($getAction == "add") {
 	}
 	$preparedLabels = implode(",", $labels);	
 	$deadline = new TDLDeadline();
-	$deadline->fromForm($_POST["deadline"]);
+	$deadline->fromForm(filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING));
 	// Needs to parse if it is repeatable deadline or once in a lifetime
 	// ToDo query db for user's todo table
 	
@@ -57,10 +60,10 @@ if ($getAction == "add") {
 	
 }
 
-if (($getAction == "done") && isset($_POST["toBeRemoved"])) {	 
+if (($getAction == "done") && $toBeRemoved) {	 
 	 // Get info about task from TASKS table
 	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels, repeat FROM TASKS WHERE id=?;")) {
-	 	$stmt->bind_param("i", $_POST["toBeRemoved"]);
+	 	$stmt->bind_param("i", $toBeRemoved);
 	 	$stmt->execute();
 		$stmt->bind_result($id, $name, $project, $labels, $repeat);
 	 // Add info to Done table
@@ -75,12 +78,12 @@ if (($getAction == "done") && isset($_POST["toBeRemoved"])) {
 	 
 }
 
-if (($getAction == "remove") && isset($_POST["toBeRemoved"])) {
+if (($getAction == "remove") && $toBeRemoved) {
 	/*
 	 *  id cannot be post. It can in theory but just to be on safe side POST is ok, DELETE would be better
 	 */
 	 if ($stmt = $mysqli->prepare("DELETE FROM TASKS WHERE id=? LIMIT 1")) {
-	 	$stmt->bind_param("i", $_POST["toBeRemoved"]);
+	 	$stmt->bind_param("i", $toBeRemoved);
 	 	$stmt->execute();
 	 	$stmt->close();
 	 }
