@@ -20,10 +20,10 @@
 	 			$this->namedMonth($rawDeadLine);
 	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\. \d\d?\. \d\d\d?\d?/', $rawDeadLine)) {
 	 		// 6:00 1. 1. 1090
-	 		
+	 			$this->europeanMonth($rawDeadLine, true);
 	 		} else if (preg_match('/\d\d?\. \d\d?. \d\d\d?\d?/', $rawDeadLine)) {
 	 		// 11. 11. 1090
-	 		
+	 			$this->europeanMonth($rawDeadLine);
 	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 6:00 11/11/11
 	 		
@@ -75,19 +75,16 @@
 	 			} else {
 	 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %Y");
 	 			}
-	 			print_r($dlPrep);
 	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
-	 			echo "here";
 	 			if (strlen($pieces[2]) == 3) {
 	 				$dlPrep = strptime($rawDeadLine, "%e %b %Y");
 	 			} else {
 	 				$dlPrep = strptime($rawDeadLine, "%e %B %Y");
 	 			}
-	 			print_r($dlPrep);
 	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
-	 		echo $deadline;
-	 	}	 	
+	 		$this->deadline = $deadline;
+	 	}	 	 	
 	 }
 ?>
