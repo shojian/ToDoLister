@@ -15,38 +15,55 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	}
 
 if (isset($_GET["add"])) {
+	print_r($_POST["task"]);
 	$toProcess = explode(" ",$_POST["task"]);
+	echo count($toProcess);
 	$project = "";
 	$labels = [];
 	$taskName = "";
 	for ($i = 0; $i < count($toProcess); $i++) {
-		if (strpos($toProcess[$i], "#") == 0) {
+		echo "aa";
+		if (strpos($toProcess[$i], "#") === 0) {
 			// labels			
+			echo "labels";
 			if (!is_numeric(substr($toProcess[$i], 1))) // allowing to write "I'm #1"
 				$labels[] = substr($toProcess[$i], 1);
-		} else if ((strpos($toProcess[$i], "@") == 0) && (empty($project))) {
+		} else if (strpos($toProcess[$i], "@") === 0) {
 			// project
+			echo "project";
 			$project = substr($toProcess[$i], 1);
 		} else {
+			echo "else";
 			$taskName .= " ".$toProcess[$i];
+			echo " tn:".$taskName;
 		}
 	}
 	$preparedLabels = implode(",", $labels);	
 	$deadline = new TDLDeadline();
-	$deadline::fromForm($_POST["deadline"]);
+	$deadline->fromForm($_POST["deadline"]);
 	// Needs to parse if it is repeatable deadline or once in a lifetime
 	// ToDo query db for user's todo table
-	if ($stmt = $mysqli->prepare("INSERT INTO TASKS (taskname, project, labels, deadline, repeat) VALUES (?, ?, ?, ?, ?)")) {
-		$stmt->bind_param("sssis", $taskName, $project, $labels, $deadline->getDeadline(), $deadline->getRepeat());
+	echo "{ 1".$taskName." 2".$project." 3". implode(",",$labels)." 4". $deadline->getDeadline()." 5". $deadline->getRepeat()." }";
+	
+	if ($stmt = $mysqli->prepare("INSERT INTO ".$_SESSION["username"]."_tasks (name, project, labels, deadline, repeatDeadline) VALUES (?, ?, ?, ?, ?);")) {
+		
+		$stmt->bind_param("sssis", $taskName, $project, $stmtLabels, $stmtDeadline, $stmtRepeat);
+		$stmtLabels = implode(",",$labels);
+		$stmtDeadline = $deadline->getDeadline();
+		$stmtRepeat = $deadline->getRepeat();
 		$stmt->execute();
+		printf("Error: %s.\n", $stmt->error);
 		$stmt->close();
+		
+	} else {
+		echo "ueue";
 	}
 	
 }
 
 if (isset($_GET["done"]) && isset($_POST["toBeRemoved"])) {	 
 	 // Get info about task from TASKS table
-	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels, repeat FROM TASKS WHERE id=?;") {
+	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels, repeat FROM TASKS WHERE id=?;")) {
 	 	$stmt->bind_param("i", $_POST["toBeRemoved"]);
 	 	$stmt->execute();
 		$stmt->bind_result($id, $name, $project, $labels, $repeat);

@@ -3,7 +3,7 @@
 	 *  File which holds Deadline class which works out deadlines
 	 */
 	 class TDLDeadline {
-	 	private $deadline;
+	 	private $deadline = 0;
 	 	private $repeat = "";
 	 
 	 	function __construct() {
@@ -55,11 +55,11 @@
 	 	}
 	 	
 	 	public function getDeadline() {
-	 		return $deadline;
+	 		return $this->deadline;
 	 	}
 	 	
 	 	public function getRepeat() {
-	 		return $repeat;
+	 		return $this->repeat;
 	 	}
 	 	
 	 	private function namedMonth($str, $time=false) {
