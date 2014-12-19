@@ -10,43 +10,46 @@
 	 		$deadline = 0;
 	 	}
 	 	
-	 	public static function fromForm($rawDeadLine) {
-	 		if (preg_match('/\d\d?\:\d\d \d\d? [[:alpha:]]* \d\d\d?\d?/', $rawDeadline)) {
+	 	public function fromForm($rawDeadLine) {
+		 	$rawDeadLine = trim($rawDeadLine);		 	
+	 		if (preg_match("/\d:\d\d \d?\d [[:alpha:]]* \d\d\d?\d?/", $rawDeadLine)) {
 	 		// 6:00 19 November 1989
-	 			namedMonth($rawDeadline, true);	
-	 		} else if (preg_match('/\d\d? [[:alpha:]]* \d\d\d\d/', $rawDeadline)) {
+	 			$this->namedMonth($rawDeadLine, true);	
+	 		} else if (preg_match("/\d?\d [[:alpha:]]* \d\d\d?\d?/", $rawDeadLine)) {
 	 		// 19 November 1989
-	 			namedMonth($rawDeadline);
-	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\. \d\d?\. \d\d\d?\d?/', $rawDeadline)) {
+	 			$this->namedMonth($rawDeadLine);
+	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\. \d\d?\. \d\d\d?\d?/', $rawDeadLine)) {
 	 		// 6:00 1. 1. 1090
 	 		
-	 		} else if (preg_match('/\d\d?\. \d\d?. \d\d\d?\d?/', $rawDeadline)) {
+	 		} else if (preg_match('/\d\d?\. \d\d?. \d\d\d?\d?/', $rawDeadLine)) {
 	 		// 11. 11. 1090
 	 		
-	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\/\d\d?\/\d\d/', $rawDeadline)) {
+	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 6:00 11/11/11
 	 		
-	 		} else if (preg_match('/\d\d?\/\d\d?\/\d\d/', $rawDeadline)) {
+	 		} else if (preg_match('/\d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 11/11/11
 	 		
-	 		} else if (preg_match('/eve?r?y? [[:alpha:]]*/', $rawDeadline)) {
+	 		} else if (preg_match('/eve?r?y? [[:alpha:]]*/', $rawDeadLine)) {
 	 		// every Monday
 	 		
-	 		} else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadline)) {
+	 		} else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every Monday @ 6:00
 	 		
-	 		} else if (preg_match('/eve?r?y? \d\d* days @ \d?\d\:\d\d/', $rawDeadline)) {
+	 		} else if (preg_match('/eve?r?y? \d\d* days @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every 33 days @ 6:00
 	 		
-	 		} else if (preg_match('/eve?r?y? \d\d* days/', $rawDeadline)) {
+	 		} else if (preg_match('/eve?r?y? \d\d* days/', $rawDeadLine)) {
 	 		// every 33 days
 	 		
-	 		} else if (preg_match('/eve?r?y? \d\d? @ \d?\d\:\d\d/', $rawDeadline)) {
+	 		} else if (preg_match('/eve?r?y? \d\d? @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every 25 @ 6:00
 	 		
-	 		} else if (preg_match('/eve?r?y? \d\d?/', $rawDeadline)) {
+	 		} else if (preg_match('/eve?r?y? \d\d?/', $rawDeadLine)) {
 	 		// every 25
 	 		
+	 		} else {
+	 			echo "err";
 	 		}
 	 	}
 	 	
@@ -62,25 +65,29 @@
 	 		return $this->repeat;
 	 	}
 	 	
-	 	private function namedMonth($str, $time=false) {
-	 		$pieces = explode(" ", $str);
-	 		if ($time) {
-	 			$dlPrep;
+	 	function namedMonth($rawDeadLine, $time=false) {		 	
+	 		$pieces = explode(" ", $rawDeadLine);
+	 		$deadline = -1;
+                        $dlPrep = null;
+	 		if ($time) {	 			
 	 			if (strlen($pieces[2]) == 3) {
-	 				$dlPrep = strptime($str, "%k:%M %e %b %Y");
+	 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %b %Y");
 	 			} else {
-	 				$dlPrep = strptime($str, "%k:%M %e %B %Y");
+	 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %Y");
 	 			}
-	 			$this->deadline = mktime(0, $dlPrep['tm_min'], $dlPrep['tm_hour'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+	 			print_r($dlPrep);
+	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
-	 			$dlPrep;
+	 			echo "here";
 	 			if (strlen($pieces[2]) == 3) {
-	 				$dlPrep = strptime($str, "%e %b %Y");
+	 				$dlPrep = strptime($rawDeadLine, "%e %b %Y");
 	 			} else {
-	 				$dlPrep = strptime($str, "%e %B %Y");
+	 				$dlPrep = strptime($rawDeadLine, "%e %B %Y");
 	 			}
-	 			$this->deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+	 			print_r($dlPrep);
+	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
-	 	}
+	 		echo $deadline;
+	 	}	 	
 	 }
 ?>

@@ -14,8 +14,9 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	}
 $getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 $toBeRemoved = filter_input(INPUT_POST, "toBeRemoved", FILTER_SANITIZE_STRING);
-if ($toBeRemoved == null)
-	$toBeRemoved = false;
+if ($toBeRemoved == null) {
+    $toBeRemoved = false;
+}
 if ($getAction == "add") {
 	$toProcess = explode(" ",filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING));
 	$project = "";
@@ -24,9 +25,10 @@ if ($getAction == "add") {
 	for ($i = 0; $i < count($toProcess); $i++) {
 		if (strpos($toProcess[$i], "#") === 0) {
 			// labels			
-			if (!is_numeric(substr($toProcess[$i], 1))) // allowing to write "I'm #1"
-				$labels[] = substr($toProcess[$i], 1);
-		} else if (strpos($toProcess[$i], "@") === 0) {
+			if (!is_numeric(substr($toProcess[$i], 1))) { // allowing to write "I'm #1"
+                $labels[] = substr($toProcess[$i], 1);
+            }
+        } else if (strpos($toProcess[$i], "@") === 0) {
 			// project
 			$project = substr($toProcess[$i], 1);
 		} else {
