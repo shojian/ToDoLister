@@ -12,14 +12,13 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	if ($mysqli->connect_errno) {
     	redirectError("conn");
 	}
-
-if (isset($_GET["add"])) {
+$getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
+if ($getAction == "add") {
 	$toProcess = explode(" ",$_POST["task"]);
 	$project = "";
 	$labels = [];
 	$taskName = "";
 	for ($i = 0; $i < count($toProcess); $i++) {
-		echo "aa";
 		if (strpos($toProcess[$i], "#") === 0) {
 			// labels			
 			if (!is_numeric(substr($toProcess[$i], 1))) // allowing to write "I'm #1"
@@ -58,7 +57,7 @@ if (isset($_GET["add"])) {
 	
 }
 
-if (isset($_GET["done"]) && isset($_POST["toBeRemoved"])) {	 
+if (($getAction == "done") && isset($_POST["toBeRemoved"])) {	 
 	 // Get info about task from TASKS table
 	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels, repeat FROM TASKS WHERE id=?;")) {
 	 	$stmt->bind_param("i", $_POST["toBeRemoved"]);
@@ -76,7 +75,7 @@ if (isset($_GET["done"]) && isset($_POST["toBeRemoved"])) {
 	 
 }
 
-if (isset($_GET["remove"]) && isset($_POST["toBeRemoved"])) {
+if (($getAction == "remove") && isset($_POST["toBeRemoved"])) {
 	/*
 	 *  id cannot be post. It can in theory but just to be on safe side POST is ok, DELETE would be better
 	 */
