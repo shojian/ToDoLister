@@ -71,20 +71,38 @@
                         $dlPrep = null;
 	 		if ($time) {	 			
 	 			if (strlen($pieces[2]) == 3) {
-	 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %b %Y");
+	 				if (strlen($pieces[3]) == 4) {
+		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %b %Y"); // 6:00 1 Nov 2014
+		 			} else {
+		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %b %y"); // 6:00 1 Nov 14
+		 			}
 	 			} else {
-	 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %Y");
+	 				if (strlen($pieces[3]) == 4) {
+		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %Y"); // 6:00 1 November 2014
+		 			} else {
+		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %y"); // 6:00 1 November 14
+		 			}
 	 			}
 	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
 	 			if (strlen($pieces[2]) == 3) {
-	 				$dlPrep = strptime($rawDeadLine, "%e %b %Y");
+	 				if (strlen($pieces[3]) == 4) {
+		 				$dlPrep = strptime($rawDeadLine, "%e %b %Y"); // 1 Nov 2014
+		 			} else {
+		 				$dlPrep = strptime($rawDeadLine, "%e %b %y"); // 1 Nov 14
+		 			}
 	 			} else {
-	 				$dlPrep = strptime($rawDeadLine, "%e %B %Y");
+	 				if (strlen($pieces[3]) == 4) {
+		 				$dlPrep = strptime($rawDeadLine, "%e %B %Y"); // 1 November 2014
+		 			} else {
+		 				$dlPrep = strptime($rawDeadLine, "%e %B %y"); // 1 November 14
+		 			}
 	 			}
 	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
 	 		$this->deadline = $deadline;
-	 	}	 	 	
+	 	}	 	
+	 	
+	 	 	
 	 }
 ?>
