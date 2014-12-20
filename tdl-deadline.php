@@ -26,10 +26,10 @@
 	 			$this->europeanMonth($rawDeadLine);
 	 		} else if (preg_match('/\d\d?\:\d\d \d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 6:00 11/11/11
-	 		
+	 			$this->americanMonth($rawDeadLine, true);
 	 		} else if (preg_match('/\d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 11/11/11
-	 		
+	 			$this->americanMonth($rawDeadLine);
 	 		} else if (preg_match('/eve?r?y? [[:alpha:]]*/', $rawDeadLine)) {
 	 		// every Monday
 	 		
@@ -110,12 +110,14 @@
 	 		if ($time) {	 			
 	 			if (strlen($pieces[2]) == 2) {
 	 				$pieces[2] = "0". $pieces[2];
+	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
 	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
 	 			if (strlen($pieces[1]) == 2) {
 	 				$pieces[1] = "0". $pieces[1];
+	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 6:00 1. 11. 2014
 	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
@@ -123,6 +125,29 @@
 	 		$this->deadline = $deadline;
 	 	}
 	 	
+	 	private function americanMonth($rawDeadLine, $time=false) {		 		 		
+	 		$deadline = -1;
+            $dlPrep = null;
+	 		if ($time) {
+		 		$pieces = explode(" ", $rawDeadLine);	 			
+		 		$subPieces = explode("/", $pieces[1]);
+	 			if (strlen($subpieces[1]) == 2) {
+	 				$subpieces[1] = "0". $pieces[1];
+	 				$rawDeadLine = $pieces[0]." ".implode("/", $subPieces);
+	 			}
+		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e/%m/%Y"); // 6:00 1. 11. 2014
+	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+	 		} else {	 			
+		 		$subPieces = explode("/", $rawDeadLine);
+	 			if (strlen($subpieces[1]) == 2) {
+	 				$subpieces[1] = "0". $pieces[1];
+	 				$rawDeadLine = implode("/", $subPieces);
+	 			}
+		 		$dlPrep = strptime($rawDeadLine, "%e/%m/%Y"); // 6:00 1. 11. 2014
+	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+	 		}
+	 		$this->deadline = $deadline;
+	 	}
 	 		
 	 }
 ?>
