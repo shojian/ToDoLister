@@ -65,10 +65,10 @@
 	 		return $this->repeat;
 	 	}
 	 	
-	 	function namedMonth($rawDeadLine, $time=false) {		 	
+	 	private function namedMonth($rawDeadLine, $time=false) {		 	
 	 		$pieces = explode(" ", $rawDeadLine);
 	 		$deadline = -1;
-                        $dlPrep = null;
+            $dlPrep = null;
 	 		if ($time) {	 			
 	 			if (strlen($pieces[2]) == 3) {
 	 				if (strlen($pieces[3]) == 4) {
@@ -103,6 +103,26 @@
 	 		$this->deadline = $deadline;
 	 	}	 	
 	 	
-	 	 	
+	 	private function europeanMonth($rawDeadLine, $time=false) {		 	
+	 		$pieces = explode(" ", $rawDeadLine);
+	 		$deadline = -1;
+            $dlPrep = null;
+	 		if ($time) {	 			
+	 			if (strlen($pieces[2]) == 2) {
+	 				$pieces[2] = "0". $pieces[2];
+	 			}
+		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
+	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+	 		} else {
+	 			if (strlen($pieces[1]) == 2) {
+	 				$pieces[1] = "0". $pieces[1];
+	 			}
+		 		$dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 6:00 1. 11. 2014
+	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+	 		}
+	 		$this->deadline = $deadline;
+	 	}
+	 	
+	 		
 	 }
 ?>
