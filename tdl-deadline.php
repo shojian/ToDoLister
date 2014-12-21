@@ -10,10 +10,10 @@ class TDLDeadline {
     private $repeat = "";
 
     function __construct() {
-        $this->deadline = 0;
+        $this->deadline = -1;
     }
 
-    public function fromForm($rawDeadLine) {
+    public function fromForm($rawDeadLine) {    	
         $rawDeadLine = trim($rawDeadLine);
         if (preg_match("/\d:\d\d \d?\d [[:alpha:]]* \d\d\d?\d?/", $rawDeadLine)) {
             // 6:00 19 November 1989
@@ -84,13 +84,13 @@ class TDLDeadline {
             $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         } else {
             if (strlen($pieces[2]) == 3) {
-                if (strlen($pieces[3]) == 4) {
+                if (strlen($pieces[2]) == 4) {
                     $dlPrep = strptime($rawDeadLine, "%e %b %Y"); // 1 Nov 2014
                 } else {
                     $dlPrep = strptime($rawDeadLine, "%e %b %y"); // 1 Nov 14
                 }
             } else {
-                if (strlen($pieces[3]) == 4) {
+                if (strlen($pieces[2]) == 4) {
                     $dlPrep = strptime($rawDeadLine, "%e %B %Y"); // 1 November 2014
                 } else {
                     $dlPrep = strptime($rawDeadLine, "%e %B %y"); // 1 November 14
@@ -105,20 +105,18 @@ class TDLDeadline {
         $dlPrep = null;
         if ($time) {
             if (strlen($pieces[2]) == 2) {
+            	$pieces[2] = "0". $pieces[2];
                 $rawDeadLine = implode(" ", $pieces);
             }
-            $dlPrep = strptime($rawDeadLine, "%k:%M %e. %n. %Y"); // 6:00 1. 11. 2014
-            $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
+            $dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
+            $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         } else {
-            if (strlen($pieces[1]) == 2) {
-                $rawDeadLine = implode(" ", $pieces);
-            }
-            $dlPrep = strptime($rawDeadLine, "%e. %n. %Y"); // 6:00 1. 11. 2014
-            $this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday'] + 1, $dlPrep['tm_year'] + 1900);
+            $dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 1. 11. 2014
+            $this->makeDeadline($dlPrep['tm_mon']+1, $dlPrep['tm_mday'] + 1, $dlPrep['tm_year'] + 1900);
         }
     }
 
-    private function americanMonth($rawDeadLine, $time = false) {
+    private function americanMonth($rawDeadLine, $time = false) { // fix this
         $dlPrep = null;
         if ($time) {
             $pieces = explode(" ", $rawDeadLine);
@@ -128,16 +126,16 @@ class TDLDeadline {
             }
             $dlPrep = strptime($rawDeadLine, "%k:%M %e/%n/%Y"); // 6:00 1. 11. 2014
             $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
+            // here stop
         } else {
             $subPieces = explode("/", $rawDeadLine);
             if (strlen($subPieces[1]) == 2) {
                 $rawDeadLine = implode("/", $subPieces);
             }
-            $dlPrep = strptime($rawDeadLine, "%e/%n/%Y"); // 6:00 1. 11. 2014
-            $this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday'] + 1, $dlPrep['tm_year'] + 1900);
+            $this->makeDeadline($subPieces[1], $subPieces[0] + 1, $subPieces[2]+2000);
         }
     }
-
+/*
     private function everyDay($rawDeadLine, $time = false) {
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
@@ -208,7 +206,7 @@ class TDLDeadline {
         }
         return abs($pos - date("N"));
     }
-
+*/
     private function isLastDayOfMonth($month, $day, $year) {
         switch ($month) {
             case 1:
@@ -245,13 +243,13 @@ class TDLDeadline {
         }
         return false;
     }
-
+    
     private function makeDeadline($month, $day, $year) {
         if (!$this->isDateValid($month, $day, $year)) {
             $this->deadline = -1;
             return;
         }
-        if (isLastDayOfMonth($month, $day, $year)) {
+        if ($this->isLastDayOfMonth($month, $day, $year)) {
             if (($month == 12) && $day == 31) { // special day, last day of the year
                 $year++;
             }
@@ -330,7 +328,7 @@ class TDLDeadline {
         }
         $this->deadline = mktime($hour, $minute, 0, $month, $day, $year);
     }
-
+/*
     private function getTimeArray($pieces) {
         if ($pieces[2] == "@") {
             return explode(":", $pieces[3]);
@@ -397,7 +395,7 @@ class TDLDeadline {
             $this->makeDeadline($month, $nextNamedDay + 1, $year);
         }
     }
-
+*/
 }
 
 ?>
