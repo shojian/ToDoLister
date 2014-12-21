@@ -83,8 +83,7 @@
 		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %y"); // 6:00 1 November 14
 		 			}
 	 			}
-	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
-		 		$this->deadline = $deadline;
+	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
 	 			if (strlen($pieces[2]) == 3) {
 	 				if (strlen($pieces[3]) == 4) {
@@ -99,13 +98,8 @@
 		 				$dlPrep = strptime($rawDeadLine, "%e %B %y"); // 1 November 14
 		 			}
 	 			}
-	 			if ($this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday'])) {
-	 				$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
-	 			} else {
-		 			// TBD
-		 		}
+	 			$this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
-	 		$this->deadline = $deadline;
 	 	}	 	
 	 	
 	 	private function europeanMonth($rawDeadLine, $time=false) {		 	
@@ -118,15 +112,14 @@
 	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
-	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
-		 		$this->deadline = $deadline;
+	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
 	 			if (strlen($pieces[1]) == 2) {
 	 				$pieces[1] = "0". $pieces[1];
 	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 6:00 1. 11. 2014
-		 		$this->makeDeadline(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+		 		$this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}	 		
 	 	}
 	 	
@@ -141,8 +134,13 @@
 	 				$rawDeadLine = $pieces[0]." ".implode("/", $subPieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e/%m/%Y"); // 6:00 1. 11. 2014
-	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
-		 		$this->deadline = $deadline;
+		 		
+		 		// Think, Sarah, think
+		 		if (!$this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)) {
+		 			$this->deadline = -1;
+		 			return;
+	 			}
+	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {	 			
 		 		$subPieces = explode("/", $rawDeadLine);
 	 			if (strlen($subpieces[1]) == 2) {
@@ -150,7 +148,7 @@
 	 				$rawDeadLine = implode("/", $subPieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%e/%m/%Y"); // 6:00 1. 11. 2014
-		 		$this->makeDeadline(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+		 		$this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
 	 	}
 	 	
@@ -205,6 +203,68 @@
 	 		}
 	 		return false;
 	 	}
-	 		
+	 	
+	 	private function makeDeadline($month, $day, $year) {
+	 		if (!$this->isDateValid($month, $day, $year)) {
+	 			$this->deadline = -1;
+	 			return;
+	 		}
+	 		if (isLastDayOfMonth($month, $day, $year)) {
+	 			if (($month == 12) && $day == 31) { // special day, last day of the year
+	 				$year++;
+	 			}
+	 			$month++;
+	 			$month %= 12;
+	 			$day = 1;
+	 		}
+	 		$deadline = mktime(0, 0, 0, $month, $day, $year);
+		 	$this->deadline = $deadline;
+	 	}
+	 	
+	 	private function isDateValid($month, $day, $year) {
+	 		if ($day < 1)
+	 			return false;
+	 		if ($month < 1)
+	 			return false;
+	 		if ($month > 12)
+	 			return false;
+	 		switch ($month) {
+	 			case 1:
+	 			case 3:
+	 			case 5:
+	 			case 7:
+	 			case 8:
+	 			case 10:
+	 			case 12:
+	 				if ($day > 31)
+	 					return false;
+	 				break;
+	 			case 2:
+	 				if (date("L", mktime(0, 0, 0, $month, $day, $year)) == 1) {
+	 					if ($day > 29)
+	 						return false;
+	 				} else {
+	 					if ($day > 28)
+	 						return false;
+	 				}
+	 				break;
+	 			default:
+	 				if ($day > 30)
+	 					return false;
+	 				break;
+	 		}
+	 		return true;
+	 	}
+	 	private function isTimeValid($hour, $minute) {
+	 		if ($hour > 23)
+	 			return false;
+	 		if ($hour < 0)
+	 			return false;
+	 		if ($minute > 59)
+	 			return false;
+	 		if ($minute < 0)
+	 			return false;
+	 		return true;
+	 	}	 		
 	 }
 ?>
