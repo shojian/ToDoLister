@@ -150,7 +150,8 @@
             $nextNamedDay = date("j")+$diff;
             $month = date("n");
             $year = date("Y");
-            if (!$this->isDateValid($month, $nextNamedDay, $year)) {
+            /* in to separate function start here*/
+            while (!$this->isDateValid($month, $nextNamedDay, $year)) {
             	switch ($month) {
             		case 1:
 		 			case 3:
@@ -196,6 +197,7 @@
             } else {
             	$this->makeDeadline($month, $day+1, $year);
             }
+            /* end here*/
             $this->repeat = $rawDeadLine;
 	 	}
 	 	
