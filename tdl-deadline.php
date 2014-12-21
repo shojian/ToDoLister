@@ -116,7 +116,7 @@ class TDLDeadline {
         }
     }
 
-    private function americanMonth($rawDeadLine, $time = false) { // fix this
+    private function americanMonth($rawDeadLine, $time = false) {
         $dlPrep = null;
         if ($time) {
             $pieces = explode(" ", $rawDeadLine);
@@ -124,9 +124,8 @@ class TDLDeadline {
             if (strlen($subPieces[1]) == 2) {
                 $rawDeadLine = $pieces[0] . " " . implode("/", $subPieces);
             }
-            $dlPrep = strptime($rawDeadLine, "%k:%M %e/%n/%Y"); // 6:00 1. 11. 2014
-            $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
-            // here stop
+            $time = explode(":", $pieces[0]);
+            $this->makeDeadlineWithTime($time[0], $time[1], $subPieces[1], $subPieces[0] + 1, $subPieces[2]+2000);
         } else {
             $subPieces = explode("/", $rawDeadLine);
             if (strlen($subPieces[1]) == 2) {
