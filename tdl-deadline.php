@@ -83,6 +83,11 @@
 		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %y"); // 6:00 1 November 14
 		 			}
 	 			}
+	 			if (!($this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)
+		 			&& $this->isTimeValid($dlPrep['tm_hour'], $dlPrep['tm_min']) )) {
+		 			$this->deadline = -1;
+		 			return;
+	 			}
 	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
 	 			if (strlen($pieces[2]) == 3) {
@@ -112,6 +117,11 @@
 	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
+		 		if (!($this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)
+		 			&& $this->isTimeValid($dlPrep['tm_hour'], $dlPrep['tm_min']) )) {
+		 			$this->deadline = -1;
+		 			return;
+	 			}
 	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
 	 		} else {
 	 			if (strlen($pieces[1]) == 2) {
@@ -135,8 +145,8 @@
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e/%m/%Y"); // 6:00 1. 11. 2014
 		 		
-		 		// Think, Sarah, think
-		 		if (!$this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)) {
+		 		if (!($this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)
+		 			&& $this->isTimeValid($dlPrep['tm_hour'], $dlPrep['tm_min']) )) {
 		 			$this->deadline = -1;
 		 			return;
 	 			}
