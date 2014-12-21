@@ -44,10 +44,10 @@
 	 			$this->everyNumberOfDays($rawDeadLine);
 	 		} else if (preg_match('/eve?r?y? \d\d? @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every 25 @ 6:00
-	 		
+	 			$this->monthlyDeadline($rawDeadLine, true);
 	 		} else if (preg_match('/eve?r?y? \d\d?/', $rawDeadLine)) {
 	 		// every 25
-	 		
+	 			$this->monthlyDeadline($rawDeadLine);
 	 		} else {
 	 			$deadline = -1;
 	 		}
@@ -142,67 +142,59 @@
 	 		}
 	 	}
 
-	 	private function everyDay($rawDeadLine, $time=false) {	 	
+	 	private function everyDay($rawDeadLine, $time=false) {
+	 		$this->repeat = $rawDeadLine;	 	
 	 		$deadline = -1;
             $dlPrep = null;
             $pieces = explode(" ", $rawDeadLine);
             $diff = $this->getDayDifference(strtolower($pieces[1]));
             $nextNamedDay = date("j")+$diff;
-            $month = date("n");
-            $year = date("Y");
-            /* in to separate function start here*/
-            while (!$this->isDateValid($month, $nextNamedDay, $year)) {
-            	switch ($month) {
-            		case 1:
-		 			case 3:
-		 			case 5:
-	 				case 7:
-	 				case 8:
-	 				case 10:
-		 			case 12:
-		 				if ($nextNamedDay > 31) {
-	 						$nextNamedDay -= 31;
-	 						$month++;	 						
-	 					}
-	 					break;
-	 				case 2:
-	 					if (date("L", mktime(0, 0, 0, $month, $day, $year)) == 1) {
-	 						if ($nextNamedDay > 29) {
-		 						$nextNamedDay -= 29;
-		 						$month++;	 						
-	 						}
-	 					} else {
-	 						if ($nextNamedDay > 28) {
-		 						$nextNamedDay -= 28;
-		 						$month++;	 						
-	 						}
-		 				}
-		 				break;
-	 				default:
-	 					if ($nextNamedDay > 30) {
-		 						$nextNamedDay -= 30;
-		 						$month++;	 						
-	 						}
-	 					break;
-            	}
-            	if ($month > 12) {
-            		$month -= 12;
-            		$year++;
-            	}
-            }
-            if ($time) {
-            	$time = $this->getTimeArray($pieces);
-            	if (count($time) == 2)
-            	$this->makeDeadlineWithTime($time[0], $time[1], $month, $day, $year);
-            } else {
-            	$this->makeDeadline($month, $day+1, $year);
-            }
-            /* end here*/
-            $this->repeat = $rawDeadLine;
+            $this->makeRepeatDeadline($nextNamedDay, $pieces);
 	 	}
 	 	
 	 	private function everyNumberOfDays($rawDeadLine, $time=false) {
-	 		
+	 		$this->repeat = $rawDeadLine;
+	 		// magic here
+	 		$pieces = explode(" ", $rawDeadLine);
+	 		$nextDayStamp = time() + (24*60*60*$pieces[1]);
+	 		$nextDay = date("j", $nextDayStamp);
+	 		$this->makeRepeatDeadline($nextDay, $pieces);
+	 	}
+	 	
+	 	private function monthlyDeadline($rawDeadLine, $time=false) {
+	 		$this->repeat = $rawDeadLine;
+	 		$pieces = explode(" ", $rawDeadLine);
+	 		if (date("j") > $pieces[1]) {
+	 			$month = date("n")+1;
+	 			$year = date("Y");
+	 			if ($month > 12) {
+	 				$month = 1;
+	 				$year = date("Y")+1;
+	 			}
+	 			if ($pieces[1] > date("t"))
+	 				$pieces[1] = date("t");
+	 			if ($time) {	 				
+	 				$subPieces = explode(":", $pieces[3]);
+	 				if (($this->isDateValid($month, $pieces[1], $year)) 
+	 					&& ($this->isTimeValid($subPieces[0], $subPieces[1])))
+	 					$this->deadline = mktime($subPieces[0], $subPieces[1], 0, $month, $pieces[1], $year);
+	 			} else {
+	 				if ($this->isDateValid(date("n"), $pieces[1], date("Y")))
+		 				$this->deadline = mktime(0, 0, 0, $month, $pieces[1], $year);
+	 			}
+	 		} else {
+	 			if ($pieces[1] > date("t"))
+	 				$pieces[1] = date("t");
+	 			if ($time) {	 				
+	 				$subPieces = explode(":", $pieces[3]);
+	 				if (($this->isDateValid(date("n"), $pieces[1], date("Y"))) 
+	 					&& ($this->isTimeValid($subPieces[0], $subPieces[1])))
+	 					$this->deadline = mktime($subPieces[0], $subPieces[1], 0, date("n"), $pieces[1], date("Y"));
+	 			} else {
+	 				if ($this->isDateValid(date("n"), $pieces[1], date("Y")))
+		 				$this->deadline = mktime(0, 0, 0, date("n"), $pieces[1], date("Y"));
+	 			}
+	 		}
 	 	}
 	 	
 	 	private function getDayDifference($desiredDay) {
@@ -332,6 +324,63 @@
         		$this->deadline = -1;
         		return array();
         	}
+	 	}
+	 	
+	 	private function makeRepeatDeadline($nextNamedDay, $pieces) {
+	 		$month = date("n");
+            $year = date("Y");            
+            while (!$this->isDateValid($month, $nextNamedDay, $year)) {
+            	switch ($month) {
+            		case 1:
+		 			case 3:
+		 			case 5:
+	 				case 7:
+	 				case 8:
+	 				case 10:
+		 			case 12:
+		 				if ($nextNamedDay > 31) {
+	 						$nextNamedDay -= 31;
+	 						$month++;	 						
+	 					}
+	 					break;
+	 				case 2:
+	 					if (date("L", mktime(0, 0, 0, $month, $day, $year)) == 1) {
+	 						if ($nextNamedDay > 29) {
+		 						$nextNamedDay -= 29;
+		 						$month++;	 						
+	 						}
+	 					} else {
+	 						if ($nextNamedDay > 28) {
+		 						$nextNamedDay -= 28;
+		 						$month++;	 						
+	 						}
+		 				}
+		 				break;
+		 			case 2:
+		 			case 4:
+		 			case 6:
+		 			case 9:
+		 			case 11:
+		 				if ($nextNamedDay > 30) {
+		 						$nextNamedDay -= 30;
+		 						$month++;	 						
+	 						}
+	 						break;
+	 				default:	 					
+	 					break;
+            	}
+            	if ($month > 12) {
+            		$month -= 12;
+            		$year++;
+            	}
+            }
+            if ($time) {
+            	$time = $this->getTimeArray($pieces);
+            	if (count($time) == 2)
+            	$this->makeDeadlineWithTime($time[0], $time[1], $month, $day, $year);
+            } else {
+            	$this->makeDeadline($month, $day+1, $year);
+            }
 	 	}
 	 }
 ?>
