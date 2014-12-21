@@ -30,12 +30,12 @@
 	 		} else if (preg_match('/\d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 11/11/11
 	 			$this->americanMonth($rawDeadLine);
+	 		} else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d//', $rawDeadLine)) {
+	 		// every Monday @ 6:00
+	 			$this->everyDay($rawDeadLine, true);
 	 		} else if (preg_match('/eve?r?y? [[:alpha:]]*/', $rawDeadLine)) {
 	 		// every Monday
-	 		
-	 		} else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadLine)) {
-	 		// every Monday @ 6:00
-	 		
+	 			$this->everyDay($rawDeadLine);
 	 		} else if (preg_match('/eve?r?y? \d\d* days @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every 33 days @ 6:00
 	 		
@@ -147,6 +147,29 @@
 	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
 	 		$this->deadline = $deadline;
+	 	}
+	 	
+	 	private function everyDay($rawDeadLine, $time=false) {	 	
+	 		$deadline = -1;
+            $dlPrep = null;
+            $pieces = explode(" ", $rawDeadLine);
+            $diff = $this->getDayDifference(strtolower($pieces[1]));
+	 	}
+	 	
+	 	private function getDayDifference($desiredDay) {
+	 		$diff = 0;
+	 		$listOfDays = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
+	 		foreach ($listOfDays as $day) {	 			
+	 			if (strpos($day, $desiredDay) !== false) {	 				
+	 				break;
+	 			}
+	 			$diff++;
+	 		}
+	 		return $diff;
+	 	}
+	 	
+	 	private function checkEndOfMonth($month) {
+	 	
 	 	}
 	 		
 	 }
