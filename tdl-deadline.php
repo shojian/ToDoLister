@@ -30,7 +30,7 @@
 	 		} else if (preg_match('/\d\d?\/\d\d?\/\d\d/', $rawDeadLine)) {
 	 		// 11/11/11
 	 			$this->americanMonth($rawDeadLine);
-	 		} else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d//', $rawDeadLine)) {
+	 		} else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every Monday @ 6:00
 	 			$this->everyDay($rawDeadLine, true);
 	 		} else if (preg_match('/eve?r?y? [[:alpha:]]*/', $rawDeadLine)) {
@@ -83,12 +83,7 @@
 		 				$dlPrep = strptime($rawDeadLine, "%k:%M %e %B %y"); // 6:00 1 November 14
 		 			}
 	 			}
-	 			if (!($this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)
-		 			&& $this->isTimeValid($dlPrep['tm_hour'], $dlPrep['tm_min']) )) {
-		 			$this->deadline = -1;
-		 			return;
-	 			}
-	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+	 			$this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);	
 	 		} else {
 	 			if (strlen($pieces[2]) == 3) {
 	 				if (strlen($pieces[3]) == 4) {
@@ -113,22 +108,15 @@
             $dlPrep = null;
 	 		if ($time) {	 			
 	 			if (strlen($pieces[2]) == 2) {
-	 				$pieces[2] = "0". $pieces[2];
 	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
-		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
-		 		if (!($this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)
-		 			&& $this->isTimeValid($dlPrep['tm_hour'], $dlPrep['tm_min']) )) {
-		 			$this->deadline = -1;
-		 			return;
-	 			}
-	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %n. %Y"); // 6:00 1. 11. 2014
+		 		$this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);	
 	 		} else {
 	 			if (strlen($pieces[1]) == 2) {
-	 				$pieces[1] = "0". $pieces[1];
 	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
-		 		$dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 6:00 1. 11. 2014
+		 		$dlPrep = strptime($rawDeadLine, "%e. %n. %Y"); // 6:00 1. 11. 2014
 		 		$this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}	 		
 	 	}
@@ -140,24 +128,16 @@
 		 		$pieces = explode(" ", $rawDeadLine);	 			
 		 		$subPieces = explode("/", $pieces[1]);
 	 			if (strlen($subpieces[1]) == 2) {
-	 				$subpieces[1] = "0". $pieces[1];
 	 				$rawDeadLine = $pieces[0]." ".implode("/", $subPieces);
 	 			}
-		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e/%m/%Y"); // 6:00 1. 11. 2014
-		 		
-		 		if (!($this->isDateValid($dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900)
-		 			&& $this->isTimeValid($dlPrep['tm_hour'], $dlPrep['tm_min']) )) {
-		 			$this->deadline = -1;
-		 			return;
-	 			}
-	 			$this->deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e/%n/%Y"); // 6:00 1. 11. 2014
+		 		$this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);		 		
 	 		} else {	 			
 		 		$subPieces = explode("/", $rawDeadLine);
 	 			if (strlen($subpieces[1]) == 2) {
-	 				$subpieces[1] = "0". $pieces[1];
 	 				$rawDeadLine = implode("/", $subPieces);
 	 			}
-		 		$dlPrep = strptime($rawDeadLine, "%e/%m/%Y"); // 6:00 1. 11. 2014
+		 		$dlPrep = strptime($rawDeadLine, "%e/%n/%Y"); // 6:00 1. 11. 2014
 		 		$this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
 	 	}
@@ -167,13 +147,64 @@
             $dlPrep = null;
             $pieces = explode(" ", $rawDeadLine);
             $diff = $this->getDayDifference(strtolower($pieces[1]));
+            $nextNamedDay = date("j")+$diff;
+            $month = date("n");
+            $year = date("Y");
+            if (!$this->isDateValid($month, $nextNamedDay, $year)) {
+            	switch ($month) {
+            		case 1:
+		 			case 3:
+		 			case 5:
+	 				case 7:
+	 				case 8:
+	 				case 10:
+		 			case 12:
+		 				if ($nextNamedDay > 31) {
+	 						$nextNamedDay -= 31;
+	 						$month++;	 						
+	 					}
+	 					break;
+	 				case 2:
+	 					if (date("L", mktime(0, 0, 0, $month, $day, $year)) == 1) {
+	 						if ($nextNamedDay > 29) {
+		 						$nextNamedDay -= 29;
+		 						$month++;	 						
+	 						}
+	 					} else {
+	 						if ($nextNamedDay > 28) {
+		 						$nextNamedDay -= 28;
+		 						$month++;	 						
+	 						}
+		 				}
+		 				break;
+	 				default:
+	 					if ($nextNamedDay > 30) {
+		 						$nextNamedDay -= 30;
+		 						$month++;	 						
+	 						}
+	 					break;
+            	}
+            	if ($month > 12) {
+            		$month -= 12;
+            		$year++;
+            	}
+            }
+            if ($time) {
+            	
+            	$this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $month, $day, $year);
+            } else {
+            	$this->makeDeadline($month, $day+1, $year);
+            }
+            $this->repeat = $rawDeadLine;
 	 	}
 	 	
 	 	private function getDayDifference($desiredDay) {
-	 		$pos = 1;
+	 		$pos = 0;
+	 		$found = false;
 	 		$listOfDays = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
 	 		foreach ($listOfDays as $day) {	 			
-	 			if (strpos($day, $desiredDay) !== false) {	 				
+	 			if (strpos($day, $desiredDay) !== false) {
+		 			$found = true;	 				
 	 				break;
 	 			}
 	 			$pos++;
@@ -224,7 +255,8 @@
 	 				$year++;
 	 			}
 	 			$month++;
-	 			$month %= 12;
+	 			if ($month > 12)
+	 				$month -= 12;
 	 			$day = 1;
 	 		}
 	 		$deadline = mktime(0, 0, 0, $month, $day, $year);
@@ -232,12 +264,6 @@
 	 	}
 	 	
 	 	private function isDateValid($month, $day, $year) {
-	 		if ($day < 1)
-	 			return false;
-	 		if ($month < 1)
-	 			return false;
-	 		if ($month > 12)
-	 			return false;
 	 		switch ($month) {
 	 			case 1:
 	 			case 3:
@@ -263,6 +289,12 @@
 	 					return false;
 	 				break;
 	 		}
+			if ($day < 1)
+	 			return false;
+	 		if ($month < 1)
+	 			return false;
+	 		if ($month > 12)
+	 			return false;
 	 		return true;
 	 	}
 	 	private function isTimeValid($hour, $minute) {
@@ -276,5 +308,14 @@
 	 			return false;
 	 		return true;
 	 	}	 		
+	 	
+	 	private function makeDeadlineWithTime($hour, $minute, $month, $day, $year) {
+	 		if (!($this->isDateValid($month, $day, $year)
+		 			&& $this->isTimeValid($hour, $minute) )) {
+		 			$this->deadline = -1;
+		 			return;
+	 		}
+	 		$this->deadline = mktime($hour, $minute, 0, $month, $day, $year);
+	 	}
 	 }
 ?>
