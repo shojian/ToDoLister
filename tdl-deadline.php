@@ -49,7 +49,7 @@
 	 		// every 25
 	 		
 	 		} else {
-	 			echo "err";
+	 			$deadline = -1;
 	 		}
 	 	}
 	 	
@@ -84,6 +84,7 @@
 		 			}
 	 			}
 	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+		 		$this->deadline = $deadline;
 	 		} else {
 	 			if (strlen($pieces[2]) == 3) {
 	 				if (strlen($pieces[3]) == 4) {
@@ -98,7 +99,11 @@
 		 				$dlPrep = strptime($rawDeadLine, "%e %B %y"); // 1 November 14
 		 			}
 	 			}
-	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+	 			if ($this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday'])) {
+	 				$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+	 			} else {
+		 			// TBD
+		 		}
 	 		}
 	 		$this->deadline = $deadline;
 	 	}	 	
@@ -114,15 +119,15 @@
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e. %m. %Y"); // 6:00 1. 11. 2014
 	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+		 		$this->deadline = $deadline;
 	 		} else {
 	 			if (strlen($pieces[1]) == 2) {
 	 				$pieces[1] = "0". $pieces[1];
 	 				$rawDeadLine = implode(" ", $pieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 6:00 1. 11. 2014
-	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
-	 		}
-	 		$this->deadline = $deadline;
+		 		$this->makeDeadline(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+	 		}	 		
 	 	}
 	 	
 	 	private function americanMonth($rawDeadLine, $time=false) {		 		 		
@@ -137,6 +142,7 @@
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%k:%M %e/%m/%Y"); // 6:00 1. 11. 2014
 	 			$deadline = mktime($dlPrep['tm_hour'], $dlPrep['tm_min'], 0, $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year']+1900);
+		 		$this->deadline = $deadline;
 	 		} else {	 			
 		 		$subPieces = explode("/", $rawDeadLine);
 	 			if (strlen($subpieces[1]) == 2) {
@@ -144,9 +150,8 @@
 	 				$rawDeadLine = implode("/", $subPieces);
 	 			}
 		 		$dlPrep = strptime($rawDeadLine, "%e/%m/%Y"); // 6:00 1. 11. 2014
-	 			$deadline = mktime(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
+		 		$this->makeDeadline(0, 0, 0, $dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
-	 		$this->deadline = $deadline;
 	 	}
 	 	
 	 	private function everyDay($rawDeadLine, $time=false) {	 	
@@ -157,19 +162,48 @@
 	 	}
 	 	
 	 	private function getDayDifference($desiredDay) {
-	 		$diff = 0;
+	 		$pos = 1;
 	 		$listOfDays = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
 	 		foreach ($listOfDays as $day) {	 			
 	 			if (strpos($day, $desiredDay) !== false) {	 				
 	 				break;
 	 			}
-	 			$diff++;
+	 			$pos++;
 	 		}
-	 		return $diff;
+	 		return abs($pos - date("N"));
 	 	}
 	 	
-	 	private function checkEndOfMonth($month) {
-	 	
+	 	private function isLastDayOfMonth($month, $day, $year) {
+	 		switch ($month) {
+	 			case 1:
+	 			case 3:
+	 			case 5:
+	 			case 7:
+	 			case 8:
+	 			case 10:
+	 			case 12:
+	 				if ($day == 31)
+	 					return true;
+	 				break;
+	 			case 2:
+	 				if (date("L", mktime(0, 0, 0, $month, $day, $year)) == 1) {
+	 					if ($day == 29)
+	 						return true;
+	 					else
+	 						return false;
+	 				} else {
+	 					if ($day == 28)
+	 						return true;
+	 					else
+	 						return false;
+	 				}
+	 				break;
+	 			default:
+	 				if ($day == 30)
+	 					return true;
+	 				break;
+	 		}
+	 		return false;
 	 	}
 	 		
 	 }
