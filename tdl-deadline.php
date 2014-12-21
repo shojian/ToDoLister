@@ -38,10 +38,10 @@
 	 			$this->everyDay($rawDeadLine);
 	 		} else if (preg_match('/eve?r?y? \d\d* days @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every 33 days @ 6:00
-	 		
+	 			$this->everyNumberOfDays($rawDeadLine, true);
 	 		} else if (preg_match('/eve?r?y? \d\d* days/', $rawDeadLine)) {
 	 		// every 33 days
-	 		
+	 			$this->everyNumberOfDays($rawDeadLine);
 	 		} else if (preg_match('/eve?r?y? \d\d? @ \d?\d\:\d\d/', $rawDeadLine)) {
 	 		// every 25 @ 6:00
 	 		
@@ -141,7 +141,7 @@
 		 		$this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday']+1, $dlPrep['tm_year']+1900);
 	 		}
 	 	}
-	 	
+
 	 	private function everyDay($rawDeadLine, $time=false) {	 	
 	 		$deadline = -1;
             $dlPrep = null;
@@ -190,12 +190,17 @@
             	}
             }
             if ($time) {
-            	
-            	$this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $month, $day, $year);
+            	$time = $this->getTimeArray($pieces);
+            	if (count($time) == 2)
+            	$this->makeDeadlineWithTime($time[0], $time[1], $month, $day, $year);
             } else {
             	$this->makeDeadline($month, $day+1, $year);
             }
             $this->repeat = $rawDeadLine;
+	 	}
+	 	
+	 	private function everyNumberOfDays($rawDeadLine, $time=false) {
+	 		
 	 	}
 	 	
 	 	private function getDayDifference($desiredDay) {
@@ -316,6 +321,15 @@
 		 			return;
 	 		}
 	 		$this->deadline = mktime($hour, $minute, 0, $month, $day, $year);
+	 	}
+	 	
+	 	private function getTimeArray($pieces) {
+        	if ($pieces[2] == "@") {
+        		return explode(":", $pieces[3]);
+        	} else {
+        		$this->deadline = -1;
+        		return array();
+        	}
 	 	}
 	 }
 ?>
