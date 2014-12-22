@@ -36,7 +36,7 @@ class TDLDeadline {
         } else if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadLine)) {
             // every Monday @ 6:00
             $this->everyDay($rawDeadLine, true);
-        } else if (preg_match('/eve?r?y? [[:alpha:]]*/', $rawDeadLine)) {
+        } else if (preg_match('/eve?r?y? [[:alpha:]]*\z/', $rawDeadLine)) {
             // every Monday
             $this->everyDay($rawDeadLine);
         } else if (preg_match('/eve?r?y? \d\d* days @ \d?\d\:\d\d/', $rawDeadLine)) {
@@ -46,9 +46,9 @@ class TDLDeadline {
             // every 33 days
             $this->everyNumberOfDays($rawDeadLine);
         } else if (preg_match('/eve?r?y? \d\d? @ \d?\d\:\d\d/', $rawDeadLine)) {
-            // every 25 @ 6:00
+            // every 25 @ 6:00            
             $this->monthlyDeadline($rawDeadLine, true);
-        } else if (preg_match('/eve?r?y? \d\d?/', $rawDeadLine)) {
+        } else if (preg_match('/eve?r?y? \d\d?\z/', $rawDeadLine)) {
             // every 25
             $this->monthlyDeadline($rawDeadLine);
         } else {
@@ -142,16 +142,21 @@ class TDLDeadline {
         $nextNamedDay = date("j") + $diff;
         $this->makeRepeatDeadline($nextNamedDay, $pieces, $time);
     }
-/*
+
     private function everyNumberOfDays($rawDeadLine, $time = false) {
         $this->repeat = $rawDeadLine;
-        // magic here
         $pieces = explode(" ", $rawDeadLine);
-        $nextDayStamp = time() + (24 * 60 * 60 * $pieces[1]);
-        $nextDay = date("j", $nextDayStamp);
-        $this->makeRepeatDeadline($nextDay, $pieces, $time);
+        if ($time) {
+        	$time = $this->getTimeArray($pieces);
+        	if (count($time) > 0) {
+	        	$this->deadline = mktime(0,0,0) + (24 * 60 * 60 * $pieces[1])+(intval($time[0])*60*60)+intval($time[1]);
+	        }
+        } else {
+        	$this->deadline = mktime(0,0,0) + (24 * 60 * 60 * ($pieces[1]+1));        	
+        }
+        $this->repeat = $rawDeadLine;
     }
-
+/*
     private function monthlyDeadline($rawDeadLine, $time = false) {
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
@@ -329,12 +334,14 @@ class TDLDeadline {
     }
 
     private function getTimeArray($pieces) {
-        if ($pieces[2] == "@") {
-            return explode(":", $pieces[3]);
-        } else {
-            $this->deadline = -1;
-            return array();
-        }
+    	$atSignPos = -1;
+    	for ($i = 0; $i < count($pieces); $i++) {
+    		if ($pieces[$i] == "@") {
+    			return explode(":", $pieces[$i+1]);
+    		}
+    	}
+        $this->deadline = -1;
+        return array();
     }
 
     private function makeRepeatDeadline($nextNamedDay, $pieces, $time) {
