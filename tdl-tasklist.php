@@ -40,9 +40,7 @@ if (!isset($_GET["deadline"]) && isset($_GET["label"]) && !isset($_GET["project"
 		$queryMode = "deadline";
 	}
 }
-	/* Sigh, at the moment only single user. Have to think how to scale it to
-	   multi user environment. Certainly a To Do. Having tasks for users would be
-	   messy and slow. */
+
 if ($stmt = $mysqli->prepare($query)) {
 		$stmt->bind_param('i', $deadline);
 		$stmt->execute();
