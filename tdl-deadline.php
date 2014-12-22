@@ -81,7 +81,7 @@ class TDLDeadline {
                     $dlPrep = strptime($rawDeadLine, "%k:%M %e %B %y"); // 6:00 1 November 14
                 }
             }
-            $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon'], $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
+            $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         } else {
             if (strlen($pieces[2]) == 3) {
                 if (strlen($pieces[2]) == 4) {
@@ -96,7 +96,7 @@ class TDLDeadline {
                     $dlPrep = strptime($rawDeadLine, "%e %B %y"); // 1 November 14
                 }
             }
-            $this->makeDeadline($dlPrep['tm_mon'], $dlPrep['tm_mday'] + 1, $dlPrep['tm_year'] + 1900);
+            $this->makeDeadline($dlPrep['tm_mon']+1, $dlPrep['tm_mday'] + 1, $dlPrep['tm_year'] + 1900);
         }
     }
 
@@ -191,7 +191,7 @@ class TDLDeadline {
             }
         }
     }
-
+*/
     private function getDayDifference($desiredDay) {
         $pos = 0;
         $found = false;
@@ -203,9 +203,9 @@ class TDLDeadline {
             }
             $pos++;
         }
-        return abs($pos - date("N"));
+        return abs($pos + date("N"));
     }
-*/
+
     private function isLastDayOfMonth($month, $day, $year) {
         switch ($month) {
             case 1:
