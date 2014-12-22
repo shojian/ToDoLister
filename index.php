@@ -31,7 +31,12 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
 		$stmt->close();
 	}
 	if ($requiresLogin) {
-		require("tdl-tasklist.php");
+		$getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
+		if ($getAction == "edit") {
+			require("tdl-editTask.php");
+		} else {
+			require("tdl-tasklist.php");
+		}
 	} else {		
 		require("tdl-login.php");
 	}

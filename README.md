@@ -6,7 +6,7 @@ This is yet another productivity app project.
 Deadline styles
 ---------------
 
-*This is NOT implemented yet and may change*
+*Class is implemented, newer formats may be added*
 
 ### Date based formatting
 

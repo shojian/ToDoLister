@@ -13,7 +13,7 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
     	redirectError("conn");
 	}
 $getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
-$toBeRemoved = filter_input(INPUT_POST, "toBeRemoved", FILTER_SANITIZE_STRING);
+$toBeRemoved = filter_input(INPUT_GET, "toBeRemoved", FILTER_SANITIZE_STRING);
 if ($toBeRemoved == null) {
     $toBeRemoved = false;
 }
@@ -38,8 +38,6 @@ if ($getAction == "add") {
 	$preparedLabels = implode(",", $labels);	
 	$deadline = new TDLDeadline();
 	$deadline->fromForm(filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING));
-	// Needs to parse if it is repeatable deadline or once in a lifetime
-	// ToDo query db for user's todo table
 	
 	
 	if ($stmt = $mysqli->prepare("INSERT INTO ".$_SESSION["username"]."_tasks (name, project, labels, deadline, repeatDeadline) VALUES (?, ?, ?, ?, ?);")) {
@@ -80,11 +78,11 @@ if (($getAction == "done") && $toBeRemoved) {
 	 
 }
 
-if (($getAction == "remove") && $toBeRemoved) {
+if ($getAction == "remove") {
 	/*
 	 *  id cannot be post. It can in theory but just to be on safe side POST is ok, DELETE would be better
 	 */
-	 if ($stmt = $mysqli->prepare("DELETE FROM TASKS WHERE id=? LIMIT 1")) {
+	 if ($stmt = $mysqli->prepare("DELETE FROM ".$_SESSION["username"]."_tasks WHERE id=? LIMIT 1")) {
 	 	$stmt->bind_param("i", $toBeRemoved);
 	 	$stmt->execute();
 	 	$stmt->close();

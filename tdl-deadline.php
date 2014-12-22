@@ -112,7 +112,7 @@ class TDLDeadline {
             $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         } else {
             $dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 1. 11. 2014
-            $this->makeDeadline($dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
+            $this->makeDeadline($dlPrep['tm_mon']+1, $dlPrep['tm_mday']+1, $dlPrep['tm_year'] + 1900);
         }
     }
 
