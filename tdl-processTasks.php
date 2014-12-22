@@ -4,6 +4,7 @@
 	 */
 session_start();
 require_once('tdl-config.php');
+require_once('tdl-deadline.php');
 require_once('tdl-taskClass.php');
 $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	
@@ -29,13 +30,16 @@ if ($getAction == "add") {
 		$stmtRepeat = $task->getRepeat();
 		if($stmt->execute()) {		
 			$stmt->close();	
+			$mysqli->close();
 			redirectInserted();
 		} else {
 			$stmt->close();	
+			$mysqli->close();
 			redirectError("insertError");
 		}
 		
 	} else {
+		$mysqli->close();
 		redirectError("insertError");
 	}
 	
@@ -55,13 +59,16 @@ if ($getAction == "updateTask") {
 		$taskId = filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING);
 		if($stmt->execute()) {		
 			$stmt->close();	
+			$mysqli->close();
 			redirectUpdated();
 		} else {
 			$stmt->close();	
+			$mysqli->close();
 			redirectError("updateError");
 		}
 		
 	} else {
+		$mysqli->close();
 		redirectError("updateError");
 	}
 	
@@ -69,20 +76,40 @@ if ($getAction == "updateTask") {
 
 if (($getAction == "done") && $toBeRemoved) {	 
 	 // Get info about task from TASKS table
-	 if ($stmt = $mysqli->prepare("SELECT id, taskname, project, labels, repeat FROM TASKS WHERE id=?;")) {
+	 if ($stmt = $mysqli->prepare("SELECT taskname, repeat FROM TASKS WHERE id=?;")) {
 	 	$stmt->bind_param("i", $toBeRemoved);
 	 	$stmt->execute();
-		$stmt->bind_result($id, $name, $project, $labels, $repeat);
-	 // Add info to Done table
-	 	 
-	 // If non-renewable remove task from TASKS table
-	 
-	 // otherwise renew task in TASKS table
+		$stmt->bind_result($name, $repeat);
+		while ($stmt->fetch()) : 
+			if ($stmtIns = $mysqli->prepare("INSERT INTO ".$_SESSION["username"]."_completed (name, date) VALUES (?, ?);")) {
+				$stmtIns->bind_param("si", $name, $completedDate);
+				$completedDate = time();
+				$stmtIns->execute();
+				$stmtIns->close();
+			}
+			if (strlen($repeat) > 0) {
+				$deadline = new TDLDeadline();
+				$deadline->fromForm($repeat);
+				if ($stmtUp = $mysqli->prepare("UPDATE ".$_SESSION["username"]."_completed SET deadline=? WHERE id=?;")) {
+					$stmtUp->bind_param("ii", $dl, $toBeRemoved);
+					$dl = $deadline->getDeadline();
+					$stmtUp->execute();
+					$stmtUp->close();
+				}
+			} else {
+				if ($stmtDel = $mysqli->prepare("DELETE FROM ".$_SESSION["username"]."_completed WHERE id=?;")) {
+					$stmtDel->bind_param("i", $toBeRemoved);
+					$stmtDel->execute();
+					$stmtDel->close();
+				}
+			}
+		endwhile;
+		$stmt->close();
 	 } else {
 	 	// Throw some error
 	 	
 	 }
-	 
+	 $mysqli->close();
 }
 
 if ($getAction == "remove") {
@@ -94,6 +121,7 @@ if ($getAction == "remove") {
 	 	$stmt->execute();
 	 	$stmt->close();
 	 }
+	 $mysqli->close();
 }
 
 /* Redirect functions */

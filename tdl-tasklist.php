@@ -51,7 +51,9 @@ if ($stmt = $mysqli->prepare($query)) {
 		<?php
 		while ($stmt->fetch()) : ?>
 			<div class="task-item flex-child flex-parent">
-				<div class="flex-child done-mark"><input type="checkbox" name="task-no['<?php echo $id; ?>']" /></div>
+				<div class="flex-child done-mark">
+				<!-- to be checkbox -->
+				<input type="hidden" name="task-no['<?php echo $id; ?>']" /></div>
 				<div class="flex-child flex-parent flex-column text-info">
 					<div class="flex-child name-info"><?php echo $name; ?></div>
 					<div class="flex-child meta-info"><?php echo $project." ".$labels; ?></div>
@@ -65,7 +67,11 @@ if ($stmt = $mysqli->prepare($query)) {
 					echo date("G:i j. m. Y", $deadline);
 				?></div>
 				<!-- not good solution, dangerous even -->
-				<a href="tdl-processTasks.php?action=remove&toBeRemoved=<?php echo $id; ?>">Delete</a> <a href="?action=edit&id=<?php echo $id; ?>">Edit</a>
+				<div>
+				<a href="tdl-processTasks.php?action=done&toBeRemoved=<?php echo $id; ?>">Complete</a>
+				<a href="tdl-processTasks.php?action=remove&toBeRemoved=<?php echo $id; ?>">Delete</a>
+				<a href="?action=edit&id=<?php echo $id; ?>">Edit</a>
+				</div>
 			</div>
 		<? endwhile; ?>
 		</div>
