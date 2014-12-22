@@ -5,7 +5,7 @@
 	 
 	 require_once('tdl-deadline.php');
 	 
-	 class Task {
+	 class TaskClass {
 	 	
 	 	private $taskName;
 	 	private $project;
@@ -14,24 +14,26 @@
 	 	private $repeat;
 	 
 	 	function __construct($rawToProcess, $rawDeadLine) {
-    	    $toProcess = explode(" ",$rawToProcess);
+                        $toProcess = explode(" ",$rawToProcess);
 			$project = "";
 			$labels = [];
 			$taskName = "";
 			for ($i = 0; $i < count($toProcess); $i++) {
 				if (strpos($toProcess[$i], "#") === 0) {
 					// labels			
+					echo "labels";
 					if (!is_numeric(substr($toProcess[$i], 1))) { // allowing to write "I'm #1"
 	            	    $labels[] = substr($toProcess[$i], 1);
     	        	}
         		} else if (strpos($toProcess[$i], "@") === 0) {
 					// project
+					echo "project";
 					$project = substr($toProcess[$i], 1);
 				} else {
+					echo "name";
 					$taskName .= " ".$toProcess[$i];
 				}
-			}
-			$preparedLabels = implode(",", $labels);	
+			}	
 			$deadline = new TDLDeadline();
 			$deadline->fromForm($rawDeadLine);
 			$this->taskName = $taskName;
@@ -44,7 +46,7 @@
 	    public function getTaskName() {
 	    	return $this->taskName;
 	    }
-	    public function getName() {
+	    public function getProject() {
 	    	return $this->project;
 	    }
 	    public function getLabels() {
@@ -56,6 +58,7 @@
 	    public function getRepeat() {
 	    	return $this->repeat;
 	    }
+	    
 	 }
 
 ?>
