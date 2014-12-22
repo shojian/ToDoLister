@@ -156,7 +156,7 @@ class TDLDeadline {
         }
         $this->repeat = $rawDeadLine;
     }
-/*
+
     private function monthlyDeadline($rawDeadLine, $time = false) {
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
@@ -177,7 +177,7 @@ class TDLDeadline {
                 }
             } else {
                 if ($this->isDateValid(date("n"), $pieces[1], date("Y"))) {
-                    $this->deadline = mktime(0, 0, 0, $month, $pieces[1], $year);
+                    $this->deadline = mktime(0, 0, 0, $month, $pieces[1], $year)+(24*60*60);
                 }
             }
         } else {
@@ -191,12 +191,12 @@ class TDLDeadline {
                 }
             } else {
                 if ($this->isDateValid(date("n"), $pieces[1], date("Y"))) {
-                    $this->deadline = mktime(0, 0, 0, date("n"), $pieces[1], date("Y"));
+                    $this->deadline = mktime(0, 0, 0, date("n"), $pieces[1], date("Y"))+(24*60*60);
                 }
             }
         }
     }
-*/
+
     private function getDayDifference($desiredDay) {
         $pos = 0;
         $found = false;
