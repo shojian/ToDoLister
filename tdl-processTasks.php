@@ -4,7 +4,7 @@
 	 */
 session_start();
 require_once('tdl-config.php');
-require_once('tdl-deadline.php');
+require_once('tdl-taskClass.php');
 
 $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	
@@ -18,37 +18,47 @@ if ($toBeRemoved == null) {
     $toBeRemoved = false;
 }
 if ($getAction == "add") {
-	$toProcess = explode(" ",filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING));
-	$project = "";
-	$labels = [];
-	$taskName = "";
-	for ($i = 0; $i < count($toProcess); $i++) {
-		if (strpos($toProcess[$i], "#") === 0) {
-			// labels			
-			if (!is_numeric(substr($toProcess[$i], 1))) { // allowing to write "I'm #1"
-                $labels[] = substr($toProcess[$i], 1);
-            }
-        } else if (strpos($toProcess[$i], "@") === 0) {
-			// project
-			$project = substr($toProcess[$i], 1);
-		} else {
-			$taskName .= " ".$toProcess[$i];
-		}
-	}
-	$preparedLabels = implode(",", $labels);	
-	$deadline = new TDLDeadline();
-	$deadline->fromForm(filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING));
-	
+	$task = new Task(filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING),
+					 filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING))
 	
 	if ($stmt = $mysqli->prepare("INSERT INTO ".$_SESSION["username"]."_tasks (name, project, labels, deadline, repeatDeadline) VALUES (?, ?, ?, ?, ?);")) {
 		
 		$stmt->bind_param("sssis", $taskName, $project, $stmtLabels, $stmtDeadline, $stmtRepeat);
-		$stmtLabels = implode(",",$labels);
-		$stmtDeadline = $deadline->getDeadline();
-		$stmtRepeat = $deadline->getRepeat();
+		$taskName = $task->getTaskName();
+		$project = $task->getProject();		
+		$stmtLabels = implode(",",$task->getLabels());
+		$stmtDeadline = $task->getDeadline();
+		$stmtRepeat = $task->getRepeat();
 		if($stmt->execute()) {		
 			$stmt->close();	
 			redirectInserted();
+		} else {
+			$stmt->close();	
+			redirectError("insertError");
+		}
+		
+	} else {
+		redirectError("insertError");
+	}
+	
+}
+
+if ($getAction == "update") {
+	$task = new Task(filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING),
+					 filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING))
+	
+	if ($stmt = $mysqli->prepare("UPDATE ".$_SESSION["username"]."_tasks SET name=?, project=?, labels=?, deadline=?, repeatDeadline=? WHERE id=?;")) {
+		
+		$stmt->bind_param("sssis", $taskName, $project, $stmtLabels, $stmtDeadline, $stmtRepeat, $taskId);
+		$taskName = $task->getTaskName();
+		$project = $task->getProject();		
+		$stmtLabels = implode(",",$task->getLabels());
+		$stmtDeadline = $task->getDeadline();
+		$stmtRepeat = $task->getRepeat();
+		$taskId = filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING);
+		if($stmt->execute()) {		
+			$stmt->close();	
+			redirectUpdated();
 		} else {
 			$stmt->close();	
 			redirectError("insertError");
