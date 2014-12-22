@@ -112,12 +112,11 @@ class TDLDeadline {
             $this->makeDeadlineWithTime($dlPrep['tm_hour'], $dlPrep['tm_min'], $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         } else {
             $dlPrep = strptime($rawDeadLine, "%e. %m. %Y"); // 1. 11. 2014
-            $this->makeDeadline($dlPrep['tm_mon']+1, $dlPrep['tm_mday'] + 1, $dlPrep['tm_year'] + 1900);
+            $this->makeDeadline($dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         }
     }
 
     private function americanMonth($rawDeadLine, $time = false) {
-        $dlPrep = null;
         if ($time) {
             $pieces = explode(" ", $rawDeadLine);
             $subPieces = explode("/", $pieces[1]);
@@ -125,16 +124,17 @@ class TDLDeadline {
                 $rawDeadLine = $pieces[0] . " " . implode("/", $subPieces);
             }
             $time = explode(":", $pieces[0]);
-            $this->makeDeadlineWithTime($time[0], $time[1], $subPieces[1], $subPieces[0] + 1, $subPieces[2]+2000);
+            print_r($subPieces);
+            $this->makeDeadlineWithTime($time[0], $time[1], $subPieces[0], $subPieces[1], $subPieces[2]+2000);
         } else {
             $subPieces = explode("/", $rawDeadLine);
             if (strlen($subPieces[1]) == 2) {
                 $rawDeadLine = implode("/", $subPieces);
             }
-            $this->makeDeadline($subPieces[1], $subPieces[0] + 1, $subPieces[2]+2000);
+            $this->makeDeadline($subPieces[0], $subPieces[1], $subPieces[2]+2000);
         }
     }
-/*
+
     private function everyDay($rawDeadLine, $time = false) {
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
@@ -142,7 +142,7 @@ class TDLDeadline {
         $nextNamedDay = date("j") + $diff;
         $this->makeRepeatDeadline($nextNamedDay, $pieces, $time);
     }
-
+/*
     private function everyNumberOfDays($rawDeadLine, $time = false) {
         $this->repeat = $rawDeadLine;
         // magic here
@@ -271,11 +271,11 @@ class TDLDeadline {
             case 8:
             case 10:
             case 12:
-                if ($day > 31) {
+                if ($day > 31) {                	
                     return false;
                 }
                 break;
-            case 2:
+            case 2:            	
                 if (date("L", mktime(0, 0, 0, $month, $day, $year)) == 1) {
                     if ($day > 29) {
                         return false;
@@ -327,7 +327,7 @@ class TDLDeadline {
         }
         $this->deadline = mktime($hour, $minute, 0, $month, $day, $year);
     }
-/*
+
     private function getTimeArray($pieces) {
         if ($pieces[2] == "@") {
             return explode(":", $pieces[3]);
@@ -394,7 +394,7 @@ class TDLDeadline {
             $this->makeDeadline($month, $nextNamedDay + 1, $year);
         }
     }
-*/
+
 }
 
 ?>
