@@ -8,3 +8,7 @@ regex
 playground.php
 
 To Do Next
+/nbproject/private/
+nbproject/project.properties
+
+nbproject/project.xml

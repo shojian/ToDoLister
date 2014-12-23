@@ -92,7 +92,7 @@ if (($getAction == "done") && $toBeRemoved) {
 				$deadline->fromForm($repeat);
 				if ($stmtUp = $mysqli->prepare("UPDATE ".$_SESSION["username"]."_completed SET deadline=? WHERE id=?;")) {
 					$stmtUp->bind_param("ii", $dl, $toBeRemoved);
-					$dl = $deadline->getDeadline();
+					$dl = $deadline->getNextDeadline(); // to be created
 					$stmtUp->execute();
 					$stmtUp->close();
 				}

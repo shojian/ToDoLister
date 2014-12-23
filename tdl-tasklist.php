@@ -77,6 +77,7 @@ if ($stmt = $mysqli->prepare($query)) {
 		</div>
 		<?php
 		$stmt->close();
-	}	?>
+	}	
+        ?>
 	</div>
 </div>
