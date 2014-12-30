@@ -61,10 +61,11 @@ if ($stmt = $mysqli->prepare($query)) {
 				<?php if ($deadline < time()) : ?>
 				<div class="deadline overdue">
 				<?php endif; 
-				if (date("G:i", $deadline) == "0:00")			
+				if (date("G:i:s", $deadline) == "23:59:59") {			
 					echo date("j. m. Y", $deadline);
-				else 
+                                } else {
 					echo date("G:i j. m. Y", $deadline);
+                                }
 				?></div>
 				<!-- not good solution, dangerous even -->
 				<div>
@@ -73,7 +74,7 @@ if ($stmt = $mysqli->prepare($query)) {
 				<a href="?action=edit&id=<?php echo $id; ?>">Edit</a>
 				</div>
 			</div>
-		<? endwhile; ?>
+		<?php endwhile; ?>
 		</div>
 		<?php
 		$stmt->close();
