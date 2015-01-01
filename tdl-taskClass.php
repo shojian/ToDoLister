@@ -21,16 +21,13 @@
 			for ($i = 0; $i < count($toProcess); $i++) {
 				if (strpos($toProcess[$i], "#") === 0) {
 					// labels			
-					echo "labels";
 					if (!is_numeric(substr($toProcess[$i], 1))) { // allowing to write "I'm #1"
 	            	    $labels[] = substr($toProcess[$i], 1);
     	        	}
         		} else if (strpos($toProcess[$i], "@") === 0) {
-					// project
-					echo "project";
+					// project					
 					$project = substr($toProcess[$i], 1);
 				} else {
-					echo "name";
 					$taskName .= " ".$toProcess[$i];
 				}
 			}	

@@ -2,6 +2,14 @@ ToDoLister
 ==========
 This is yet another productivity app project.
 
+Projects and labels
+-------------------
+
+#project_name ... can be only one project
+@label_name ... task can have more than one label
+!1 means that the task is top level and may have subtasks (optional)
+!x where x > 1 means that task is a subtask
+
 
 Deadline styles
 ---------------
@@ -34,3 +42,23 @@ Deadline styles
 - ev(ery) 3 days (@ 6:00)
 - ev(ery) 25 (@ 6:00)
  * this means every 25th day of the month. If month has no such day this task will not be performed that month
+ 
+ Templates
+ ---------
+ 
+ *To be implemented!*
+ 
+ ### Set of tasks
+ 
+ &task_name #project_name @some_label !x
+ 
+ example:
+ &task_name #project_name @some_label !1
+ &task2 #project_name @some_label !2
+ &task3 #project_name @some_label !3
+ 
+ 
+ 
+ ### Project template
+ TBD
+ 
