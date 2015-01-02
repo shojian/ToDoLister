@@ -53,12 +53,19 @@ Deadline styles
  &task_name #project_name @some_label !x
  
  example:
+ 
  &task_name #project_name @some_label !1
+ 
  &task2 #project_name @some_label !2
+ 
  &task3 #project_name @some_label !3
  
  
  
  ### Project template
- TBD
+ 
+ new #project
+ 
+ &task_name #project_name @some_label !x
+ 
  
