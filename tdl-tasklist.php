@@ -5,8 +5,9 @@
 	 
 	require("tdl-menu.php");	 
 ?>
-	<div id="tasks" class="flex-child flex-parent flex-column">
+	<div id="tasks" class="flex-child flex-parent flex-column">        
 	<?php
+        
 	/* Add new task start */ ?>
 	<div class="flex-child" id="add-new-task">
 		<form action="tdl-processTasks.php?action=add" method="post">
@@ -27,12 +28,12 @@ if (date('I', time())) {
 }
 $deadline = mktime(0, 0, 0, $tomorrow["mon"], $tomorrow["mday"], $tomorrow["year"], $dst);
 $queryMode;
-$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_TASKS WHERE deadline<=?";
+$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE deadline<=?";
 if (!isset($_GET["deadline"]) && isset($_GET["label"]) && !isset($_GET["project"])) {
-	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_TASKS WHERE labels<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE labels<=?";
 	$queryMode = "label";
 } else if (!isset($_GET["deadline"]) && !isset($_GET["label"]) && isset($_GET["project"])) {
-	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_TASKS WHERE project<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE project<=?";
 	$queryMode = "project";
 } else {
 	if (isset($_GET["deadline"])) {		
