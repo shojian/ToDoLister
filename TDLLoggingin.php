@@ -4,7 +4,7 @@
 	 */
 	 session_start();
 	 session_regenerate_id();
-	 require_once("tdl-config.php");
+	 require_once("TDLConfig.php");
 	 if ((strlen($_POST["botBlocker"]) == 0) && (SID == $_POST['lock'])) {
 	 // bots will try to fill all inputs. botBlocker input will be hidden with CSS
              

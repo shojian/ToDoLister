@@ -3,7 +3,7 @@
 	 * File which holds task class
 	 */
 	 
-	 require_once('tdl-deadline.php');
+	 require_once('TDLDeadline.php');
 	 
 	 class TaskClass {
 	 	

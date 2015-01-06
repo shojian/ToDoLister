@@ -3,7 +3,7 @@
 	 *  File which holds form for editing task
 	 */
 	$getId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING);
-	require("tdl-menu.php");
+	require("TDLMenu.php");
 ?>
 	<div id="tasks" class="flex-child flex-parent flex-column">
 		<?php /* Edit task start */ ?>
@@ -23,7 +23,7 @@
 							}	
 						}
 					?>
-			<form action="tdl-processTasks.php?action=updateTask" method="post">
+			<form action="TDLProcessTasks.php?action=updateTask" method="post">
 				<input type="hidden" name="id" value="<?php echo $id; ?>" />
 				<input type="text" name="task" value="<?php echo $name." ".$projectFinal." ".implode(' ', $labelsArr); ?>"/>
 				<input type="date" name="deadline" placeholder="dd. mm. yyyy" value="<?php echo date('j. m. Y', $deadline-1) ?>" />

@@ -5,7 +5,7 @@
 				Username or password are incorrect.
 			</div>
 		<?php endif; ?>
-			<form action="tdl-loggingin.php" method="post">
+			<form action="TDLLoggingin.php" method="post">
 				<div class="inputHolder">
 					<label for="username">Username: (required)</label>
 					<input type="text" name="username" />

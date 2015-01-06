@@ -5,11 +5,11 @@
 session_start();
 session_regenerate_id();
 //ob_start();
-require_once("tdl-config.php");
-require_once("tdl-header.php");
+require_once("TDLConfig.php");
+require_once("TDLHeader.php");
 $requiresLogin = true;
 if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
-	require("tdl-login.php");
+	require("TDLLogin.php");
 } else {
 	$mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	
@@ -33,15 +33,15 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
 	if ($requiresLogin) {
 		$getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 		if ($getAction == "edit") {
-			require("tdl-editTask.php");
+			require("TDLEditTask.php");
 		} else {
-			require("tdl-taskList.php");
+			require("TDLTaskList.php");
 		}
 	} else {		
-		require("tdl-login.php");
+		require("TDLLogin.php");
 	}
 	$mysqli->close();
 }
-require_once("tdl-footer.php");
+require_once("TDLFooter.php");
 //ob_end_flush();
 ?>

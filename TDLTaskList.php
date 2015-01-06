@@ -3,14 +3,14 @@
 	 *  Task list file. Shows tasks.
 	 */
 	 
-	require("tdl-menu.php");	 
+	require("TDLMenu.php");	 
 ?>
 	<div id="tasks" class="flex-child flex-parent flex-column">        
 	<?php
         
 	/* Add new task start */ ?>
 	<div class="flex-child" id="add-new-task">
-		<form action="tdl-processTasks.php?action=add" method="post">
+		<form action="TDLProcessTasks.php?action=add" method="post">
 			<input type="text" name="task" />
 			<input type="date" name="deadline" placeholder="dd. mm. yyyy"/>
 			<input type="submit" value="Add new task" />

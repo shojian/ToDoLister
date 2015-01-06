@@ -3,9 +3,9 @@
 	 *  File for processing creation and modification of tasko
 	 */
 session_start();
-require_once('tdl-config.php');
-require_once('tdl-deadline.php');
-require_once('tdl-taskClass.php');
+require_once('TDLConfig.php');
+require_once('TDLDeadline.php');
+require_once('TDLTaskClass.php');
 $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	
 	/* check connection */

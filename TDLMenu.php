@@ -62,7 +62,7 @@
 		$stmt->close();
 		}
 		?>		
-		<a href="<?php echo TDL_PATH ?>tdl-logout.php">Log out</a>
+		<a href="<?php echo TDL_PATH ?>TDLLogout.php">Log out</a>
 	</div> <?php
 	/* End of menu part */
 	?>
