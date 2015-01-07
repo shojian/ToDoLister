@@ -27,41 +27,40 @@
 			</ul>
 		</div>
 		<?php
-		if ($stmt = $mysqli->prepare("SELECT projects FROM users")) {
+                $projectList = array();
+                $labelList = array();
+		if ($stmt = $mysqli->prepare("SELECT type, name FROM ".$_SESSION['username']."_probels ORDER BY type;")) {
 		$stmt->execute();
-		$stmt->bind_result($projects);
-		?>
-		<div class="flex-child" id="projects-list">
-			<ul>
-			<?php while ($stmt->fetch()) :?>
-				<?php 
-					$projectArr = explode(",", $projects);
-					for ($i = 0; $i < count($projectArr); $i++):
-				 ?>
-				<li><a href="?project=<?php echo $projectArr[$i]; ?>"><?php echo $projectArr[$i]; ?></a></li>
-			<?php 
-					endfor;
-				endwhile; ?>
-			</ul>
-		</div>
-		<?php
-		$stmt->close();
-		}
-		if ($stmt = $mysqli->prepare("SELECT labels FROM users")) {
-		$stmt->execute();
-		$stmt->bind_result($projects);
-		?>
-		<div class="flex-child" id="labels-list">
-			<ul>
-				<?php while ($stmt->fetch()) :?>
-				<li><a href="?label=<?php echo $label ?>"><?php echo $label ?></a></li>
-				<?php endwhile; ?>
-			</ul>
-		</div>
-		<?php
-		$stmt->close();
-		}
-		?>		
+		$stmt->bind_result($type, $name);
+                while ($stmt->fetch()) :
+                    if ($type == "project") {
+                        $projectList[] = $name;
+                    } elseif ($type == "label") {
+                        $labelList[] = $name;
+                    }
+                endwhile;
+                ?><div><?php
+                if (count($projectList) > 0) :?>
+                    <h1>Projects</h1>
+                    <ul>
+                <?php endif;
+                foreach ($projectList as $name) :
+                    ?><li><a href="?project=<?php echo $name; ?>"><?php echo $name; ?></a></li><?php
+                endforeach;
+                    if (count($projectList) > 0) :?>
+                    </ul>
+                <?php endif;
+                if (count($labelList) > 0) :?>
+                    <h1>Labels</h1>
+                    <ul>
+                <?php endif;
+                foreach ($labelList as $name) :
+                    ?><li><a href="?label=<?php echo $name; ?>"><?php echo $name; ?></a></li><?php
+                endforeach;
+                if (count($labelList) > 0) :?>
+                    </ul>
+                <?php endif;
+                ?><div>		
 		<a href="<?php echo TDL_PATH ?>TDLLogout.php">Log out</a>
 	</div> <?php
 	/* End of menu part */
