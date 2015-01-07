@@ -11,7 +11,7 @@ $mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 
 /* check connection */
 if ($mysqli->connect_errno) {
-    redirectError("conn");
+    header("Location: " . TDL_PATH."?err=system");
 }
 $getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 $toBeRemoved = filter_input(INPUT_GET, "toBeRemoved", FILTER_SANITIZE_STRING);
