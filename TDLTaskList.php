@@ -70,8 +70,8 @@ if ($stmt = $mysqli->prepare($query)) {
 				?></div>
 				<!-- not good solution, dangerous even -->
 				<div>
-				<a href="tdl-processTasks.php?action=done&toBeRemoved=<?php echo $id; ?>">Complete</a>
-				<a href="tdl-processTasks.php?action=remove&toBeRemoved=<?php echo $id; ?>">Delete</a>
+				<a href="TDLProcessTasks.php?action=done&toBeRemoved=<?php echo $id; ?>">Complete</a>
+				<a href="TDLProcessTasks.php?action=remove&toBeRemoved=<?php echo $id; ?>">Delete</a>
 				<a href="?action=edit&id=<?php echo $id; ?>">Edit</a>
 				</div>
 			</div>
