@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  File for processing creation and modification of tasko
+ *  File for processing creation and modification of tasks
  */
 session_start();
 require_once('TDLConfig.php');

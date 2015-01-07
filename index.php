@@ -32,7 +32,7 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
 	}
 	if ($requiresLogin) {
 		$getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
-		if ($getAction == "edit") {
+		if ($getAction == "edit") {                        
 			require("TDLEditTask.php");
 		} else {
 			require("TDLTaskList.php");

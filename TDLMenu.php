@@ -27,7 +27,7 @@
 			</ul>
 		</div>
 		<?php
-		if ($stmt = $mysqli->prepare("SELECT projects FROM USERS")) {
+		if ($stmt = $mysqli->prepare("SELECT projects FROM users")) {
 		$stmt->execute();
 		$stmt->bind_result($projects);
 		?>
@@ -47,7 +47,7 @@
 		<?php
 		$stmt->close();
 		}
-		if ($stmt = $mysqli->prepare("SELECT labels FROM USERS")) {
+		if ($stmt = $mysqli->prepare("SELECT labels FROM users")) {
 		$stmt->execute();
 		$stmt->bind_result($projects);
 		?>
