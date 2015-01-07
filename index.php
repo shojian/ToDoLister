@@ -38,6 +38,8 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
                     require("TDLProbelAdd.php");
                 } elseif ($getAction == "probelEdit") {
                     require("TDLProbelEdit.php");                
+                } elseif ($getAction == "probelList") {
+                    require("TDLProbelList.php");                
                 } else {
 			require("TDLTaskList.php");
 		}

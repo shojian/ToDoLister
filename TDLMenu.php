@@ -43,7 +43,7 @@
         }
         ?><div class="flex-child probel-list" id="probel-list"><?php if (count($projectList) > 0) : ?>
                 <h2>Projects</h2>
-                <a href="?action=probelAdd&default=project">new</a> <a href="TDLProbelList.php?type=project">edit</a>
+                <a href="?action=probelAdd&default=project">new</a> <a href="?action=probelList&type=project">edit</a>
                 <ul>
                 <?php
                 endif;
@@ -56,7 +56,7 @@
                 <?php endif;
                 if (count($labelList) > 0) :  ?>
                 <h2>Labels</h2>
-                <a href="?action=probelAdd&default=label">new</a> <a href="TDLProbelList.php?type=label">edit</a>
+                <a href="?action=probelAdd&default=label">new</a> <a href="?action=probelList&type=label">edit</a>
                 <ul>
                 <?php
                 endif;
