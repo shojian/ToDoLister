@@ -34,7 +34,11 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
 		$getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 		if ($getAction == "edit") {                        
 			require("TDLEditTask.php");
-		} else {
+		} elseif ($getAction == "probelAdd") {                
+                    require("TDLProbelAdd.php");
+                } elseif ($getAction == "probelEdit") {
+                    require("TDLProbelEdit.php");                
+                } else {
 			require("TDLTaskList.php");
 		}
 	} else {		

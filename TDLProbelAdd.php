@@ -3,6 +3,7 @@
  *  File which holds form for adding projects and labels
  */
 require("TDLMenu.php");
+$probelType = filter_input(INPUT_GET, "default", FILTER_SANITIZE_STRING);
 ?>
 <div id="tasks" class="flex-child flex-parent flex-column">
     <?php /* Edit task start */ ?>
@@ -11,10 +12,10 @@ require("TDLMenu.php");
             <input type="hidden" name="id" />
             <input type="text" name="name" />
             <select name="type">
-                <option value="label">label</option>
-                <option value="project">project</option>
+                <option value="label" <?php if ($probelType == "label") { echo "selected=\"selected\""; } ?>>label</option>
+                <option value="project" <?php if ($probelType == "project") { echo "selected=\"selected\""; } ?>>project</option>
             </select>
-            <input type="submit" value="Update Project/Label" />
+            <input type="submit" value="Add new Project/Label" />
         </form>
     </div>
     <?php /* Edit task end */ ?>
