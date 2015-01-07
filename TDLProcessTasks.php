@@ -31,15 +31,15 @@ if ($getAction == "add") {
         if ($stmt->execute()) {
             $stmt->close();
             $mysqli->close();
-            redirectInserted();
+            header("Location: " . TDL_PATH);
         } else {
             $stmt->close();
             $mysqli->close();
-            redirectError("insertError");
+            header("Location: " . TDL_PATH."?err=insert");
         }
     } else {
         $mysqli->close();
-        redirectError("insertError");
+        header("Location: " . TDL_PATH."?err=system");
     }
 }
 
@@ -57,15 +57,15 @@ if ($getAction == "updateTask") {
         if ($stmt->execute()) {
             $stmt->close();
             $mysqli->close();
-            redirectUpdated();
+            header("Location: " . TDL_PATH);
         } else {
             $stmt->close();
             $mysqli->close();
-            redirectError("updateError");
+            header("Location: " . TDL_PATH."?err=update");
         }
     } else {
         $mysqli->close();
-        redirectError("updateError");
+        header("Location: " . TDL_PATH."?err=system");
     }
 }
 
@@ -120,16 +120,7 @@ if ($getAction == "remove") {
         $stmt->close();
     }
     $mysqli->close();
-}
-
-/* Redirect functions */
-
-function redirectInserted() {
-    
-}
-
-function redirectError($err) {
-    
+    header("Location: " . TDL_PATH);
 }
 
 ?>
