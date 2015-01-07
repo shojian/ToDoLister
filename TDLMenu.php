@@ -37,11 +37,13 @@
                         $projectList[] = $name;
                     } elseif ($type == "label") {
                         $labelList[] = $name;
-                    }
+                    }                
                 endwhile;
-                ?><div><?php
+                }
+                ?><div class="flex-child probel-list" id="probel-list"><?php
                 if (count($projectList) > 0) :?>
-                    <h1>Projects</h1>
+                    <h2>Projects</h2>
+                    new edit
                     <ul>
                 <?php endif;
                 foreach ($projectList as $name) :
@@ -51,7 +53,8 @@
                     </ul>
                 <?php endif;
                 if (count($labelList) > 0) :?>
-                    <h1>Labels</h1>
+                    <h2>Labels</h2>
+                    new edit
                     <ul>
                 <?php endif;
                 foreach ($labelList as $name) :
@@ -60,7 +63,7 @@
                 if (count($labelList) > 0) :?>
                     </ul>
                 <?php endif;
-                ?><div>		
+                ?></div>		
 		<a href="<?php echo TDL_PATH ?>TDLLogout.php">Log out</a>
 	</div> <?php
 	/* End of menu part */

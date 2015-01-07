@@ -30,10 +30,10 @@ $deadline = mktime(0, 0, 0, $tomorrow["mon"], $tomorrow["mday"], $tomorrow["year
 $queryMode;
 $query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE deadline<=?";
 if (!isset($_GET["deadline"]) && isset($_GET["label"]) && !isset($_GET["project"])) {
-	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE labels<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE labels LIKE ?";
 	$queryMode = "label";
 } else if (!isset($_GET["deadline"]) && !isset($_GET["label"]) && isset($_GET["project"])) {
-	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE project<=?";
+	$query = "SELECT id,name,project,labels,deadline FROM ".$_SESSION["username"]."_tasks WHERE project=?";
 	$queryMode = "project";
 } else {
 	if (isset($_GET["deadline"])) {		
@@ -48,7 +48,6 @@ if ($stmt = $mysqli->prepare($query)) {
 		$stmt->bind_result($id, $name, $project, $labels, $deadline);
 		?>
 		<div class="flex-parent flex-child flex-column" id="task-list">
-		<input type="submit" value="Update">
 		<?php
 		while ($stmt->fetch()) : ?>
 			<div class="task-item flex-child flex-parent">

@@ -20,7 +20,7 @@ if ($toBeRemoved == null) {
     $toBeRemoved = false;
 }
 
-if ($getAction == "add") {
+if ($getAction == "addProbel") {
     if ($stmt = $mysqli->prepare("INSERT INTO ".$_SESSION['username']."_probels (type, name) VALUES (?, ?);")) {
         $stmt->bind_param("ss", $type, $name);
         if ($stmt->execute()) {
@@ -38,7 +38,7 @@ if ($getAction == "add") {
     }
 }
 
-if ($getAction == "update") {
+if ($getAction == "updateProbel") {
     if ($stmt = $mysqli->prepare("UPDATE ".$_SESSION['username']."_probels SET name=?, type=? WHERE id=?;")) {
         $stmt->bind_param("ssi", $name, $type, $id);
         if ($stmt->execute()) {
@@ -56,7 +56,7 @@ if ($getAction == "update") {
     }
 }
 
-if ($getAction == "remove") {
+if ($getAction == "removeProbel") {
     if ($stmt = $mysqli->prepare("DELETE FROM " . $_SESSION["username"] . "_probels WHERE id=? LIMIT 1")) {
         $stmt->bind_param("i", $toBeRemoved);
         $stmt->execute();
