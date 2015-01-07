@@ -13,12 +13,12 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
 } else {
 	$mysqli = new mysqli(TDL_DBURI, TDL_DBUSER, TDL_DBPASS, TDL_DBNAME);
 	
-	/* check connection */
+	// check connection 
 	if ($mysqli->connect_errno) {
     	printf("Connect failed: %s\n", $mysqli->connect_error);
     	exit();
 	}
-	/* create a prepared statement */
+	// create a prepared statement 
 	if ($stmt = $mysqli->prepare("SELECT username FROM USERS WHERE username=?")) {
 		$stmt->bind_param('s', $_COOKIE["userData"]);
 		$stmt->execute();
