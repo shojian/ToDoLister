@@ -41,9 +41,10 @@
                 }
             endwhile;
         }
-        ?><div class="flex-child probel-list" id="probel-list"><?php if (count($projectList) > 0) : ?>
+        ?><div class="flex-child probel-list" id="probel-list">
                 <h2>Projects</h2>
                 <a href="?action=probelAdd&default=project">new</a> <a href="?action=probelList&type=project">edit</a>
+                <?php if (count($projectList) > 0) : ?>
                 <ul>
                 <?php
                 endif;
@@ -53,10 +54,10 @@
                 if (count($projectList) > 0) :
                     ?>
                 </ul>
-                <?php endif;
-                if (count($labelList) > 0) :  ?>
+                <?php endif; ?>                
                 <h2>Labels</h2>
                 <a href="?action=probelAdd&default=label">new</a> <a href="?action=probelList&type=label">edit</a>
+                <?php if (count($labelList) > 0) :  ?>
                 <ul>
                 <?php
                 endif;

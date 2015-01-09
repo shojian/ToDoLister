@@ -16,8 +16,8 @@ $getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 $type = filter_input(INPUT_POST, "type", FILTER_SANITIZE_STRING);
 $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_STRING);
 $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
-if ($toBeRemoved == null) {
-    $toBeRemoved = false;
+if ($id == null) {
+    $id = false;
 }
 
 if ($getAction == "addProbel") {
@@ -56,9 +56,9 @@ if ($getAction == "updateProbel") {
     }
 }
 
-if ($getAction == "removeProbel") {
-    if ($stmt = $mysqli->prepare("DELETE FROM " . $_SESSION["username"] . "_probels WHERE id=? LIMIT 1")) {
-        $stmt->bind_param("i", $toBeRemoved);
+if ($getAction == "removeProbel") {    
+    if ($stmt = $mysqli->prepare("DELETE FROM " . $_SESSION["username"] . "_probels WHERE id=?")) {
+        $stmt->bind_param("i", $id);
         $stmt->execute();
         $stmt->close();
     }

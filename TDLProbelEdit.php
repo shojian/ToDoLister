@@ -15,7 +15,7 @@ require("TDLMenu.php");
             $stmt->execute();
             $stmt->bind_result($probelId, $probelType, $probelName);
             while ($stmt->fetch()) : ?>
-                <form action="TDLProcessProbel.php?action=updateProbel" method="post">
+                <form action="TDLProcessProbel.php?action=updateProbel&id=<?php echo $probelId; ?>" method="post">
                     <input type="hidden" name="id" value="<?php echo $probelId; ?>" />
                     <input type="text" name="name" value="<?php echo $probelName; ?>"/>
                     <select name="type">

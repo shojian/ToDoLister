@@ -49,7 +49,7 @@ switch ($type) {
                     </div>
                     <!-- not good solution, dangerous even -->
                     <div>
-                        <a href="TDLProcessProbel.php?action=updateProbel&id=<?php echo $value[0]; ?>">Edit</a>
+                        <a href="?action=probelEdit&id=<?php echo $value[0]; ?>">Edit</a>
                         <a href="TDLProcessProbel.php?action=removeProbel&id=<?php echo $value[0]; ?>">Delete</a>				
                     </div>
                 </div>
@@ -67,7 +67,7 @@ switch ($type) {
                     </div>
                     <!-- not good solution, dangerous even -->
                     <div>
-                        <a href="TDLProcessProbel.php?action=updateProbel&id=<?php echo $value[0]; ?>">Edit</a>
+                        <a href="?action=probelEdit&id=<?php echo $value[0]; ?>">Edit</a>
                         <a href="TDLProcessProbel.php?action=removeProbel&id=<?php echo $value[0]; ?>">Delete</a>				
                     </div>
                 </div>
