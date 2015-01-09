@@ -60,6 +60,8 @@ if ($stmt = $mysqli->prepare($query)) {
 				</div>
 				<?php if ($deadline < time()) : ?>
 				<div class="deadline overdue">
+                                <?php else : ?>
+                                    <div class="deadline">
 				<?php endif; 
 				if (date("G:i:s", $deadline) == "23:59:59") {			
 					echo date("j. m. Y", $deadline);

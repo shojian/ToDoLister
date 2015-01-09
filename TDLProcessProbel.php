@@ -15,7 +15,7 @@ if ($mysqli->connect_errno) {
 $getAction = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 $type = filter_input(INPUT_POST, "type", FILTER_SANITIZE_STRING);
 $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_STRING);
-$id = filter_input(INPUT_POST, "id", FILTER_SANITIZE_NUMBER_INT);
+$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 if ($toBeRemoved == null) {
     $toBeRemoved = false;
 }
