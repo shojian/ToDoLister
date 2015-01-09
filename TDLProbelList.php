@@ -76,3 +76,5 @@ switch ($type) {
         endforeach;
             ?>
         </div>
+</div>
+</div>
