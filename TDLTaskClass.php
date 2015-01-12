@@ -5,7 +5,7 @@
 	 
 	 require_once('TDLDeadline.php');
 	 
-	 class TaskClass {
+	 class TDLTaskClass {
 	 	
 	 	private $taskName;
 	 	private $project;

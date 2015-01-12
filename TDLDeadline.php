@@ -15,7 +15,11 @@ class TDLDeadline {
 
     public function fromForm($rawDeadLine) {    	
         $rawDeadLine = trim($rawDeadLine);
-        if (preg_match("/\d:\d\d \d?\d [[:alpha:]]* \d\d\d?\d?/", $rawDeadLine)) {
+        if (preg_match("/\d:\d?\d tomorrow/", $rawDeadLine)) {
+            $this->tomorrow($rawDeadLine, true);
+        } else if (preg_match("/tomorrow/", $rawDeadLine)) {
+            $this->tomorrow($rawDeadLine);
+        } else if (preg_match("/\d:\d\d \d?\d [[:alpha:]]* \d\d\d?\d?/", $rawDeadLine)) {
             // 6:00 19 November 1989
             $this->namedMonth($rawDeadLine, true);
         } else if (preg_match("/\d?\d [[:alpha:]]* \d\d\d?\d?/", $rawDeadLine)) {
@@ -62,6 +66,15 @@ class TDLDeadline {
 
     public function getRepeat() {
         return $this->repeat;
+    }
+    private function tomorrow($rawDeadLine, $time = false) {
+        if ($time) {
+            $pieces = explode(" ", $rawDeadLine);
+            $subpieces = explode(":",$pieces[0]);
+            $this->deadline = mktime($subpieces[0], $subpieces[1])+(24*60*60);
+        } else {
+            $this->deadline = mktime(23, 59, 59)+(24*60*60);
+        }
     }
 
     private function namedMonth($rawDeadLine, $time = false) {
@@ -135,40 +148,49 @@ class TDLDeadline {
         }
     }
 
-    private function everyDay($rawDeadLine, $time = false) {
+    private function everyDay($rawDeadLine, $time = false, $base = false) {
+        if (!$base) {
+            $base = mktime(0,0,0);
+        }
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
-        $diff = $this->getDayDifference(strtolower($pieces[1]));
+        $diff = $this->getDayDifference(strtolower($pieces[1]), $base);
         $nextNamedDay = date("j") + $diff;
         $this->makeRepeatDeadline($nextNamedDay, $pieces, $time);
     }
 
-    private function everyNumberOfDays($rawDeadLine, $time = false) {
+    private function everyNumberOfDays($rawDeadLine, $time = false, $base = false) {
+        if (!$base) {
+            $base = mktime(0,0,0);
+        }
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
         if ($time) {
         	$time = $this->getTimeArray($pieces);
         	if (count($time) > 0) {
-	        	$this->deadline = mktime(0,0,0) + (24 * 60 * 60 * $pieces[1])+(intval($time[0])*60*60)+intval($time[1]);
+	        	$this->deadline = $base + (24 * 60 * 60 * $pieces[1])+(intval($time[0])*60*60)+intval($time[1]);
 	        }
         } else {
-        	$this->deadline = mktime(0,0,0) + (24 * 60 * 60 * ($pieces[1]+1));        	
+        	$this->deadline = $base + (24 * 60 * 60 * ($pieces[1]+1));        	
         }
         $this->repeat = $rawDeadLine;
     }
 
-    private function monthlyDeadline($rawDeadLine, $time = false) {
+    private function monthlyDeadline($rawDeadLine, $time = false, $base = false) {
+        if (!$base) {
+            $base = mktime(0,0,0);
+        }
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
         if (date("j") > $pieces[1]) {
-            $month = date("n") + 1;
-            $year = date("Y");
+            $month = date("n", $base) + 1;
+            $year = date("Y", $base);
             if ($month > 12) {
                 $month = 1;
                 $year = date("Y") + 1;
             }
-            if ($pieces[1] > date("t")) {
-                $pieces[1] = date("t");
+            if ($pieces[1] > date("t", $base)) {
+                $pieces[1] = date("t", $base);
             }
             if ($time) {
                 $subPieces = explode(":", $pieces[3]);
@@ -176,28 +198,33 @@ class TDLDeadline {
                     $this->deadline = mktime($subPieces[0], $subPieces[1], 0, $month, $pieces[1], $year);
                 }
             } else {
-                if ($this->isDateValid(date("n"), $pieces[1], date("Y"))) {
+                if ($this->isDateValid(date("n", $base), $pieces[1], date("Y", $base))) {
                     $this->deadline = mktime(23, 59, 59, $month, $pieces[1], $year);
                 }
             }
         } else {
-            if ($pieces[1] > date("t")) {
-                $pieces[1] = date("t");
+            if ($pieces[1] > date("t", $base)) {
+                $pieces[1] = date("t", $base);
             }
             if ($time) {
                 $subPieces = explode(":", $pieces[3]);
-                if (($this->isDateValid(date("n"), $pieces[1], date("Y"))) && ($this->isTimeValid($subPieces[0], $subPieces[1]))) {
-                    $this->deadline = mktime($subPieces[0], $subPieces[1], 0, date("n"), $pieces[1], date("Y"));
+                if (($this->isDateValid(date("n", $base), $pieces[1], date("Y", $base))) && ($this->isTimeValid($subPieces[0], $subPieces[1]))) {
+                    $this->deadline = mktime($subPieces[0], $subPieces[1], 0, date("n", $base), $pieces[1], date("Y", $base));
                 }
             } else {
-                if ($this->isDateValid(date("n"), $pieces[1], date("Y"))) {
-                    $this->deadline = mktime(23, 59, 59, date("n"), $pieces[1], date("Y"));
+                if ($this->isDateValid(date("n", $base), $pieces[1], date("Y", $base))) {
+                    $this->deadline = mktime(23, 59, 59, date("n", $base), $pieces[1], date("Y", $base));
                 }
             }
         }
     }
 
-    private function getDayDifference($desiredDay) {
+    private function getDayDifference($desiredDay, $base) {
+        if ($base != mktime()) {
+            $diff = intval(($base - mktime()) / (24*60*60));
+        } else {
+            $diff = 0;
+        }
         $pos = 0;
         $found = false;
         $listOfDays = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
@@ -208,7 +235,7 @@ class TDLDeadline {
             }
             $pos++;
         }
-        return abs($pos + date("N"));
+        return abs($pos + date("N"))+$diff;
     }
 
     private function isLastDayOfMonth($month, $day, $year) {
@@ -315,7 +342,6 @@ class TDLDeadline {
     }
 
     private function getTimeArray($pieces) {
-    	$atSignPos = -1;
     	for ($i = 0; $i < count($pieces); $i++) {
     		if ($pieces[$i] == "@") {
     			return explode(":", $pieces[$i+1]);
@@ -381,6 +407,31 @@ class TDLDeadline {
         } else {
             $this->makeDeadlineWithTime(23, 59, 59, $month, $nextNamedDay, $year);
         }
+    }
+    
+    function getNextDeadline($rawDeadline, $deadline) {
+        if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadLine)) {
+            // every Monday @ 6:00
+            $this->everyDay($rawDeadLine, true, $deadline);
+        } else if (preg_match('/eve?r?y? [[:alpha:]]*\z/', $rawDeadLine)) {
+            // every Monday
+            $this->everyDay($rawDeadLine, false, $deadline);
+        } else if (preg_match('/eve?r?y? \d\d* days @ \d?\d\:\d\d/', $rawDeadLine)) {
+            // every 33 days @ 6:00
+            $this->everyNumberOfDays($rawDeadLine, true, $deadline);
+        } else if (preg_match('/eve?r?y? \d\d* days/', $rawDeadLine)) {
+            // every 33 days
+            $this->everyNumberOfDays($rawDeadLine, false, $deadline);
+        } else if (preg_match('/eve?r?y? \d\d? @ \d?\d\:\d\d/', $rawDeadLine)) {
+            // every 25 @ 6:00            
+            $this->monthlyDeadline($rawDeadLine, true, $deadline);
+        } else if (preg_match('/eve?r?y? \d\d?\z/', $rawDeadLine)) {
+            // every 25
+            $this->monthlyDeadline($rawDeadLine, false, $deadline);
+        } else {
+            $this->deadline = -1;
+        }
+        return $this->deadline;
     }
 
 }
