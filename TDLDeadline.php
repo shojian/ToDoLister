@@ -5,8 +5,16 @@
  */
 
 class TDLDeadline {
-
+    /**
+     *
+     * @var long
+     */
     private $deadline = 0;
+    
+    /**
+     *
+     * @var String
+     */
     private $repeat = "";
 
     function __construct() {
@@ -75,10 +83,24 @@ class TDLDeadline {
     public function getDeadline() {
         return $this->deadline;
     }
+    
+    /**
+     * Getter for repeat
+     * 
+     * @return String
+     */
 
     public function getRepeat() {
         return $this->repeat;
     }
+    
+    /**
+     * Special function for calculating tomorrow's deadline
+     * 
+     * @param String
+     * @param boolean
+     */
+    
     private function tomorrow($rawDeadLine, $time = false) {
         if ($time) {
             $pieces = explode(" ", $rawDeadLine);
@@ -88,6 +110,13 @@ class TDLDeadline {
             $this->deadline = mktime(23, 59, 59)+(24*60*60);
         }
     }
+    
+    /**
+     * namedMonth function calculates deadline for strings where name of the month appears
+     * 
+     * @param String
+     * @param boolean
+     */
 
     private function namedMonth($rawDeadLine, $time = false) {
         $pieces = explode(" ", $rawDeadLine);
@@ -124,7 +153,13 @@ class TDLDeadline {
             $this->makeDeadlineWithTime(23, 59, 59, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         }
     }
-
+    
+    /**
+     * europeanMonth calculates deadline for strings where appears d. m. (yy)yy
+     * 
+     * @param String
+     * @param boolean
+     */
     private function europeanMonth($rawDeadLine, $time = false) {
         $pieces = explode(" ", $rawDeadLine);
         $dlPrep = null;
@@ -140,7 +175,13 @@ class TDLDeadline {
             $this->makeDeadlineWithTime(23, 59, 59, $dlPrep['tm_mon']+1, $dlPrep['tm_mday'], $dlPrep['tm_year'] + 1900);
         }
     }
-
+    
+    /**
+     * americanMonth is for strings where m/d/y appears
+     * 
+     * @param String
+     * @param boolean
+     */
     private function americanMonth($rawDeadLine, $time = false) {
         if ($time) {
             $pieces = explode(" ", $rawDeadLine);
@@ -159,9 +200,17 @@ class TDLDeadline {
             $this->makeDeadlineWithTime(23, 59, 59, $subPieces[0], $subPieces[1], $subPieces[2]+2000);
         }
     }
-
-    private function everyDay($rawDeadLine, $time = false, $base = false) {
-        if (!$base) {
+    
+    /**
+     * everyDay deals with strings in format ev(ery) Mon(day) and similar
+     * 
+     * @param String
+     * @param boolean
+     * @param long
+     */
+    
+    private function everyDay($rawDeadLine, $time = false, $base = -1) {
+        if ($base == -1) {
             $base = mktime(0,0,0);
         }
         $this->repeat = $rawDeadLine;
@@ -171,8 +220,16 @@ class TDLDeadline {
         $this->makeRepeatDeadline($nextNamedDay, $pieces, $time);
     }
 
-    private function everyNumberOfDays($rawDeadLine, $time = false, $base = false) {
-        if (!$base) {
+    /**
+     * Similar to everyDay but instead it's every number of days
+     * 
+     * @param String
+     * @param boolean
+     * @param long
+     */
+    
+    private function everyNumberOfDays($rawDeadLine, $time = false, $base = -1) {
+        if ($base == -1) {
             $base = mktime(0,0,0);
         }
         $this->repeat = $rawDeadLine;
@@ -187,9 +244,19 @@ class TDLDeadline {
         }
         $this->repeat = $rawDeadLine;
     }
-
-    private function monthlyDeadline($rawDeadLine, $time = false, $base = false) {
-        if (!$base) {
+    
+    /**
+     * Variation on everyDay excepts this is every month on certain day or last day of the month for 29, 30, 31
+     * 
+     * 
+     * @param String
+     * @param boolean
+     * @param long
+     * 
+     */
+    
+    private function monthlyDeadline($rawDeadLine, $time = false, $base = -1) {
+        if ($base == -1) {
             $base = mktime(0,0,0);
         }
         $this->repeat = $rawDeadLine;
@@ -230,7 +297,15 @@ class TDLDeadline {
             }
         }
     }
-
+    
+    /**
+     * Calculates difference between now and desired day
+     * 
+     * @param String
+     * @param long
+     * @return int
+     */
+    
     private function getDayDifference($desiredDay, $base) {
         if ($base != mktime()) {
             $diff = intval(($base - mktime()) / (24*60*60));
@@ -249,6 +324,15 @@ class TDLDeadline {
         }
         return abs($pos + date("N"))+$diff;
     }
+    
+    /**
+     * Checks if it is last day of month
+     * 
+     * @param int
+     * @param int
+     * @param int
+     * @return boolean
+     */
 
     private function isLastDayOfMonth($month, $day, $year) {
         switch ($month) {
@@ -286,7 +370,16 @@ class TDLDeadline {
         }
         return false;
     }
-
+    
+    /**
+     * Checks if the date is valid
+     * 
+     * @param int
+     * @param int
+     * @param int
+     * @return boolean
+     */
+    
     private function isDateValid($month, $day, $year) {
         switch ($month) {
             case 1:
@@ -328,6 +421,14 @@ class TDLDeadline {
         }
         return true;
     }
+    
+    /**
+     * Checks if the time is valid
+     * 
+     * @param int
+     * @param int
+     * @return boolean
+     */
 
     private function isTimeValid($hour, $minute) {
         if ($hour > 23) {
@@ -344,7 +445,19 @@ class TDLDeadline {
         }
         return true;
     }
-
+    
+    /**
+     * Creates deadline
+     * 
+     * @param int
+     * @param int
+     * @param int
+     * @param int
+     * @param int
+     * @param int
+     * @return void
+     */
+    
     private function makeDeadlineWithTime($hour, $minute, $seconds, $month, $day, $year) {
         if (!($this->isDateValid($month, $day, $year) && $this->isTimeValid($hour, $minute) )) {
             $this->deadline = -1;
@@ -352,7 +465,14 @@ class TDLDeadline {
         }
         $this->deadline = mktime($hour, $minute, $seconds, $month, $day, $year);
     }
-
+    
+    /**
+     * Gets array with time as it's values
+     * 
+     * @param array<String> 
+     * @return array
+     */
+    
     private function getTimeArray($pieces) {
     	for ($i = 0; $i < count($pieces); $i++) {
     		if ($pieces[$i] == "@") {
@@ -362,6 +482,14 @@ class TDLDeadline {
         $this->deadline = -1;
         return array();
     }
+    
+    /**
+     * Handles repeating deadlines
+     * 
+     * @param String
+     * @param array<String>
+     * @param long
+     */
 
     private function makeRepeatDeadline($nextNamedDay, $pieces, $time) {
         $month = date("n");
@@ -421,7 +549,15 @@ class TDLDeadline {
         }
     }
     
-    function getNextDeadline($rawDeadline, $deadline) {
+    /**
+     * Gets next deadline
+     * 
+     * @param String
+     * @param long
+     * @return long
+     */
+    
+    function getNextDeadline($rawDeadLine, $deadline) {
         if (preg_match('/eve?r?y? [[:alpha:]]* @ \d?\d\:\d\d/', $rawDeadLine)) {
             // every Monday @ 6:00
             $this->everyDay($rawDeadLine, true, $deadline);
