@@ -191,7 +191,7 @@ class TDLDeadline {
                 }
             } else {
                 if ($this->isDateValid(date("n"), $pieces[1], date("Y"))) {
-                    $this->deadline = mktime(23, 59, 59, date("n"), $pieces[1], date("Y"))+(24*60*60);
+                    $this->deadline = mktime(23, 59, 59, date("n"), $pieces[1], date("Y"));
                 }
             }
         }
