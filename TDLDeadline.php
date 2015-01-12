@@ -13,7 +13,7 @@ class TDLDeadline {
         $this->deadline = -1;
     }
     
-    /*
+    /**
      *  This function selects proper function to parse input to create deadline
      * 
      * @param String
@@ -65,6 +65,12 @@ class TDLDeadline {
             $this->deadline = -1;
         }
     }
+    
+    /**
+     * Getter for deadline
+     * 
+     * @return long
+     */
 
     public function getDeadline() {
         return $this->deadline;
