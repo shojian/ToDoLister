@@ -12,6 +12,12 @@ class TDLDeadline {
     function __construct() {
         $this->deadline = -1;
     }
+    
+    /*
+     *  This function selects proper function to parse input to create deadline
+     * 
+     * @param String
+     */
 
     public function fromForm($rawDeadLine) {    	
         $rawDeadLine = trim($rawDeadLine);

@@ -14,7 +14,7 @@ class TDLTaskClass {
     private $deadline;
     private $repeat;
 
-    function __construct($rawToProcess, $rawDeadLine, $mysqli) {
+    function __construct($rawToProcess, $rawDeadLine, $mysqli, $username) {
         $toProcess = explode(" ", $rawToProcess);
         $project = "";
         $labels = [];
@@ -37,7 +37,7 @@ class TDLTaskClass {
         $this->taskName = $taskName;
         $this->project = $project;
         $this->labels = $labels;
-        $this->testProjectLabels($project, $labels, $mysqli);
+        $this->testProjectLabels($project, $labels, $mysqli, $username);
         $this->deadline = $deadline->getDeadline();
         $this->repeat = $deadline->getRepeat();
     }
