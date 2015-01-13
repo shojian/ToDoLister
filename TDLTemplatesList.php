@@ -9,7 +9,7 @@ if ($stmt = $mysqli->prepare("SELECT id, type, name FROM ".$_SESSION['username']
     $stmt->bind_result($id, $type, $name);
     $counter = 0;
     ?>
-        <div class="flex-parent flex-child flex-column" id="task-list">
+        <div class="flex-parent flex-child flex-column" id="templates">
             <div class="flex-child add-new-template">
             <a href="?action=addNewTemplate">Add new template</a>
             </div>

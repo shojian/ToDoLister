@@ -15,6 +15,7 @@ require("TDLMenu.php");
             $stmt->execute();
             $stmt->bind_result($id, $name, $project, $labels, $deadline);
             while ($stmt->fetch()) :
+                $str = $name;
                 if (strlen($project) > 0) {
                     $projectFinal = "@" . $project;
                 } else {
@@ -26,11 +27,17 @@ require("TDLMenu.php");
                         $labelsArr[$i] = "#" . $labelsArr[$i];
                     }
                 }
+                if (strlen($projectFinal) > 0) {
+                    $str .= " ".$projectFinal;
+                }
+                if (count($labelsArr) > 0) {
+                    $str .= " ".implode(' ', $labelsArr);
+                }
                 ?>
                 <form action="TDLProcessTasks.php?action=updateTask" method="post">
                     <input type="hidden" name="id" value="<?php echo $id; ?>" />
-                    <input type="text" name="task" value="<?php echo $name . " " . $projectFinal . " " . implode(' ', $labelsArr); ?>"/>
-                    <input type="date" name="deadline" placeholder="dd. mm. yyyy" value="<?php echo date('j. m. Y', $deadline - 1) ?>" />
+                    <input type="text" name="task" value="<?php echo $str; ?>"/>
+                    <input type="date" name="deadline" placeholder="dd. mm. yyyy" value="<?php echo date('j. m. Y', $deadline) ?>" />
                     <input type="submit" value="Update task" />
                 </form>
             <?php

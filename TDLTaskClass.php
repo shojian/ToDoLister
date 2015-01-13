@@ -37,7 +37,7 @@ class TDLTaskClass {
         $this->taskName = $taskName;
         $this->project = $project;
         $this->labels = $labels;
-        $this->testProjectLabels($project, $labels, $mysqli, $username);
+        $this->testAndAddProjectLabels($project, $labels, $mysqli, $username);
         $this->deadline = $deadline->getDeadline();
         $this->repeat = $deadline->getRepeat();
     }
@@ -64,6 +64,7 @@ class TDLTaskClass {
 
     private function testAndAddProjectLabels($project, $labels, $mysqli, $username) {
         $toAdd = array();
+        echo "bbb";
         if (strlen($project) > 0) {
             if ($stmt = $mysqli->prepare("SELECT * FROM " . $username . "_probels WHERE name=? AND type='project';")) {
                 $stmt->bind_param("s", $project);

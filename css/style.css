@@ -80,7 +80,13 @@ a, a:active, a:visited, a:link {
     display: block;
 }
 
-#tasks {
+.templates-item-meta {
+    font-size: 15px;
+    line-height: 19px;
+    text-decoration: underline;
+}
+
+#tasks, #templates {
     width: 619px;
 }
 

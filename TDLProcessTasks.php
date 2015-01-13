@@ -19,7 +19,7 @@ if ($toBeRemoved == null) {
     $toBeRemoved = false;
 }
 if ($getAction == "add") {
-    $task = new TDLTaskClass(filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING), filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING), $mysqli, $_SESSION["username"]);
+    $task = new TDLTaskClass(trim(filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING)), filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING), $mysqli, $_SESSION["username"]);
     if ($stmt = $mysqli->prepare("INSERT INTO " . $_SESSION["username"] . "_tasks (name, project, labels, deadline, repeatDeadline) VALUES (?, ?, ?, ?, ?);")) {
 
         $stmt->bind_param("sssis", $taskName, $project, $stmtLabels, $stmtDeadline, $stmtRepeat);
@@ -44,7 +44,8 @@ if ($getAction == "add") {
 }
 
 if ($getAction == "updateTask") {
-    $task = new TDLTaskClass(filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING), filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING),$mysqli, $_SESSION["username"]);
+    echo "aa";
+    $task = new TDLTaskClass(trim(filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING)), filter_input(INPUT_POST, "deadline", FILTER_SANITIZE_STRING),$mysqli, $_SESSION["username"]);
     if ($stmt = $mysqli->prepare("UPDATE " . $_SESSION["username"] . "_tasks SET name=?, project=?, labels=?, deadline=?, repeatDeadline=? WHERE id=?;")) {
 
         $stmt->bind_param("sssisi", $taskName, $project, $stmtLabels, $stmtDeadline, $stmtRepeat, $taskId);
