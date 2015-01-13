@@ -5,7 +5,7 @@
 /* Start menu */
 ?>	
 <div class="flex-parent main"> 	
-    <div class="flex-child flex-parent flex-column" id="meta-info">
+    <div class="flex-child flex-parent flex-column" id="menu">
         <h1 class="flex-child">To Do Lister</h1>
         <div class="flex-child time-list" id="time-list">
             <ul> <?php

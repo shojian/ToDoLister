@@ -56,10 +56,15 @@ if ($stmt = $mysqli->prepare($query)) {
     }
     $stmt->execute();
     $stmt->bind_result($id, $name, $project, $labels, $deadline);
+    $counter = 0;
     ?>
         <div class="flex-parent flex-child flex-column" id="task-list">
-        <?php while ($stmt->fetch()) : ?>
-                <div class="task-item flex-child flex-parent">
+        <?php while ($stmt->fetch()) : 
+                if (($counter++ % 2) == 0) : ?>
+                <div class="task-item flex-child flex-parent even-item">
+                <?php else : ?>
+                <div class="task-item flex-child flex-parent odd-item">
+                <?php endif; ?>
                     <div class="flex-child done-mark">
                         <!-- to be checkbox -->
                         <input type="hidden" name="task-no['<?php echo $id; ?>']" /></div>
