@@ -36,7 +36,7 @@ require("TDLMenu.php");
                 ?>
                 <form action="TDLProcessTasks.php?action=updateTask" method="post">
                     <input type="hidden" name="id" value="<?php echo $id; ?>" />
-                    <input type="text" name="task" value="<?php echo $str; ?>"/>
+                    <input type="text" name="task" value="<?php echo trim($str); ?>"/>
                     <input type="date" name="deadline" placeholder="dd. mm. yyyy" value="<?php echo date('j. m. Y', $deadline) ?>" />
                     <input type="submit" value="Update task" />
                 </form>
