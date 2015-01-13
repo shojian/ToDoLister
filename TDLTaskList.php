@@ -9,9 +9,11 @@ require("TDLMenu.php");
     <?php /* Add new task start */ ?>
     <div class="flex-child" id="add-new-task">
         <form action="TDLProcessTasks.php?action=add" method="post">
-            <input type="text" name="task" />
-            <input type="date" name="deadline" placeholder="dd. mm. yyyy"/>
-            <input type="submit" value="Add new task" />
+            <div>
+            <input type="text" name="task" class="task-name-input" />
+            <input type="date" name="deadline" placeholder="dd. mm. yyyy" class="task-date-input" />
+            </div>
+            <input type="submit" value="Add new task" class="submit-btn"/>
         </form>
     </div>
 <?php
@@ -85,7 +87,7 @@ if ($stmt = $mysqli->prepare($query)) {
                         }
                         ?></div>
                         <!-- not good solution, dangerous even -->
-                        <div>
+                        <div class="item-meta">
                             <a href="TDLProcessTasks.php?action=done&toBeRemoved=<?php echo $id; ?>">Complete</a>
                             <a href="TDLProcessTasks.php?action=remove&toBeRemoved=<?php echo $id; ?>">Delete</a>
                             <a href="?action=edit&id=<?php echo $id; ?>">Edit</a>

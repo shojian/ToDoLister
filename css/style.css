@@ -64,7 +64,6 @@ a, a:active, a:visited, a:link {
 }
 
 .task-item {
-	overflow: hidden;
         padding: 0.5em 0.5em 0.5em 1em;
 }
 
@@ -73,13 +72,31 @@ a, a:active, a:visited, a:link {
         background: #FbFbFb;
 }
 
+#tasks {
+    width: 619px;
+}
+
+.task-name-input {
+    width: 70%;
+}
+
+.task-date-input {
+    width: 25%;
+}
+
 .done-mark {
 	padding-top: 8px;
+}
+
+.item-meta {
+    font-size: 12px;
+    font-style: italic;    
 }
 
 .meta-info {
 	font-style: italic;
 	color: #111;
+        font-size: 14px;
 }
 
 .deadline {
@@ -98,7 +115,7 @@ a, a:active, a:visited, a:link {
 footer {
 	height: 100px;
 	margin: 0 auto;
-	width: 70vw;
+	width: 870px;
 	text-align: center;
         background: #FBFBFB;
 }
@@ -106,6 +123,7 @@ footer {
 #add-new-task {
     padding: 1em;
     border: 1px solid #979797;
+    overflow: hidden;
 }
 
 input[type='submit'] {
@@ -117,6 +135,10 @@ input[type='submit'] {
 	font-size: 16px;
 	color: white;
 	padding: 5px 10px;
+}
+
+.submit-btn {
+    float: right;
 }
 
 .loginFormHolder {
