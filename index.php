@@ -40,7 +40,9 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
                     require("TDLProbelEdit.php");                
                 } elseif ($getAction == "probelList") {
                     require("TDLProbelList.php");                
-                } else {
+                } elseif ($getAction == "templatesList") {
+                    require("TDLTemplateList.php");
+                }else {
 			require("TDLTaskList.php");
 		}
 	} else {		

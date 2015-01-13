@@ -68,6 +68,8 @@
                 </ul>
     <?php endif;
     ?></div>		
+        <a href="?action=templatesList">Templates</a>
+        <!--<a href="?action=settings">Settings</a>-->
         <a href="<?php echo TDL_PATH ?>TDLLogout.php">Log out</a>
     </div> <?php
     /* End of menu part */
