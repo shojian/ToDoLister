@@ -89,7 +89,6 @@ if (($getAction == "done") && $toBeRemoved) {
     }
     foreach ($nameDoubleTuple as $value) {
         if (strlen($value[1]) > 0) {
-            echo "updates";
             $deadline = new TDLDeadline();
             $deadline->fromForm($value[1]);
             if ($stmtUp = $mysqli->prepare("UPDATE " . $_SESSION["username"] . "_tasks SET deadline=? WHERE id=?;")) {
