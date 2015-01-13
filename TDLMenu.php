@@ -67,10 +67,12 @@
                 if (count($labelList) > 0) : ?>
                 </ul>
     <?php endif;
-    ?></div>		
+    ?></div>	
+        <div class="last-things">
         <a href="?action=templatesList">Templates</a>
         <!--<a href="?action=settings">Settings</a>-->
         <a href="<?php echo TDL_PATH ?>TDLLogout.php">Log out</a>
+        </div>
     </div> <?php
     /* End of menu part */
     ?>

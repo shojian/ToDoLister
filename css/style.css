@@ -54,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 	flex-flow: column wrap; 
 }
 
-.time-list ul {
+ul {
 	list-style: none;;
 }
 
@@ -70,6 +70,14 @@ a, a:active, a:visited, a:link {
 #menu {
 	padding: 0 2em 2em;
         background: #FbFbFb;
+}
+
+.last-things {
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+.last-things a, .templates-item-meta a {
+    display: block;
 }
 
 #tasks {
@@ -167,4 +175,8 @@ input[type='submit'] {
 
 .even-item {
     background: white;
+}
+
+.add-new-template {
+    margin: 1em;
 }

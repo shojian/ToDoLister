@@ -41,7 +41,7 @@ if (!isset($_COOKIE["userData"]) || !isset($_SESSION["username"])) {
                 } elseif ($getAction == "probelList") {
                     require("TDLProbelList.php");                
                 } elseif ($getAction == "templatesList") {
-                    require("TDLTemplateList.php");
+                    require("TDLTemplatesList.php");
                 }else {
 			require("TDLTaskList.php");
 		}
