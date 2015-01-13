@@ -255,7 +255,8 @@ class TDLDeadline {
         }
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
-        if (date("j") > $pieces[1]) {
+        print_r($pieces);
+        if (date("j", $base) <= $pieces[1]) {
             $month = date("n", $base) + 1;
             $year = date("Y", $base);
             if ($month > 12) {

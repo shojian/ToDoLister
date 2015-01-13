@@ -73,12 +73,12 @@ if ($getAction == "updateTask") {
 if (($getAction == "done") && $toBeRemoved) {
     // Get info about task from TASKS table
     $nameDoubleTuple = array();
-    if ($stmt = $mysqli->prepare("SELECT name, repeatDeadline FROM " . $_SESSION["username"] . "_tasks WHERE id=?;")) {
+    if ($stmt = $mysqli->prepare("SELECT name, repeatDeadline, deadline FROM " . $_SESSION["username"] . "_tasks WHERE id=?;")) {
         $stmt->bind_param("i", $toBeRemoved);
         $stmt->execute();
-        $stmt->bind_result($name, $repeat);
+        $stmt->bind_result($name, $repeat, $fetchedDeadline);
         while ($stmt->fetch()) :
-            $nameDoubleTuple[] = array($name, $repeat);
+            $nameDoubleTuple[] = array($name, $repeat, $fetchedDeadline);
         endwhile;
         $stmt->close();
     }
@@ -91,10 +91,9 @@ if (($getAction == "done") && $toBeRemoved) {
     foreach ($nameDoubleTuple as $value) {
         if (strlen($value[1]) > 0) {
             $deadline = new TDLDeadline();
-            $deadline->fromForm($value[1]);
             if ($stmtUp = $mysqli->prepare("UPDATE " . $_SESSION["username"] . "_tasks SET deadline=? WHERE id=?;")) {
                 $stmtUp->bind_param("ii", $dl, $toBeRemoved);
-                $dl = $deadline->getNextDeadline(); // to be created
+                $dl = $deadline->getNextDeadline($value[1], $value[2]); // to be created
                 $stmtUp->execute();
                 $stmtUp->close();
             }
