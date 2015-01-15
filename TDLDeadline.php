@@ -317,8 +317,8 @@ class TDLDeadline {
      * @return int
      */    
     private function getDayDifference($desiredDay, $base) {
-        if ($base != mktime()) {
-            $diff = intval(($base - mktime()) / (24*60*60));
+        if (date("j n Y" ,$base) != date("j n Y" ,mktime())) {
+            $diff = 7 - intval(($base - mktime()) / (24*60*60));
         } else {
             $diff = 0;
         }
@@ -332,7 +332,7 @@ class TDLDeadline {
             }
             $pos++;
         }
-        if (($pos - date("N")) >= 0) {          
+        if (($pos - date("N")) >= 0) {             
             return $pos - date("N") + $diff;
         } else {
             return 7 - abs($pos - date("N")) + $diff;

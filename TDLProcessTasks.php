@@ -92,7 +92,8 @@ if (($getAction == "done") && $toBeRemoved) {
             $deadline = new TDLDeadline();
             if ($stmtUp = $mysqli->prepare("UPDATE " . $_SESSION["username"] . "_tasks SET deadline=? WHERE id=?;")) {
                 $stmtUp->bind_param("ii", $dl, $toBeRemoved);
-                $dl = $deadline->getNextDeadline($value[1], $value[2]); // to be created
+                $dl = $deadline->getNextDeadline($value[1], $value[2]);
+                echo " ".$dl." ";
                 $stmtUp->execute();
                 $stmtUp->close();
             }
