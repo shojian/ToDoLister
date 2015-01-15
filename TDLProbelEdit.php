@@ -7,7 +7,8 @@ require("TDLMenu.php");
 ?>
 <div id="tasks" class="flex-child flex-parent flex-column">
     <?php /* Edit task start */ ?>
-    <div class="flex-child" id="edit-probel">
+    <div class="flex-child addedit-probel" id="edit-probel">
+        <h1>Edit project/label</h1>
         <?php
         $query = "SELECT id, type, name FROM " . $_SESSION["username"] . "_probels WHERE id=?;";
         if ($stmt = $mysqli->prepare($query)) {
@@ -17,12 +18,12 @@ require("TDLMenu.php");
             while ($stmt->fetch()) : ?>
                 <form action="TDLProcessProbel.php?action=updateProbel&id=<?php echo $probelId; ?>" method="post">
                     <input type="hidden" name="id" value="<?php echo $probelId; ?>" />
-                    <input type="text" name="name" value="<?php echo $probelName; ?>"/>
-                    <select name="type">
+                    <input type="text" name="name" class="text-field" value="<?php echo $probelName; ?>"/>
+                    <select class="date-field" name="type">
                         <option value="label" <?php if ($probelType == "label") { echo "selected=\"selected\""; } ?>>label</option>
                         <option value="project" <?php if ($probelType == "project") { echo "selected=\"selected\""; } ?>>project</option>
                     </select>
-                    <input type="submit" value="Update Project/Label" />
+                    <input type="submit" value="Update Project/Label" class="submit-btn" />
                 </form>
             <?php
             endwhile;

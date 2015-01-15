@@ -186,3 +186,20 @@ input[type='submit'] {
 .add-new-template {
     margin: 1em;
 }
+
+#edit-task, .addedit-probel {
+    margin: 1em;
+}
+
+.edit-task h1, .addedit-probel h1 {
+    font-size: 1.8em;
+    font-family: Merriweather, serif;
+}
+
+.text-field {
+    width: 70%;
+}
+
+.date-field {
+    width: 25%;
+}

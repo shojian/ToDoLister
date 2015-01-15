@@ -5,9 +5,10 @@
 $getId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING);
 require("TDLMenu.php");
 ?>
-<div id="tasks" class="flex-child flex-parent flex-column">
+<div id="tasks" class="flex-child flex-parent flex-column">    
     <?php /* Edit task start */ ?>
-    <div class="flex-child" id="edit-task">
+    <div class="flex-child edit-task" id="edit-task">
+        <h1>Edit task</h1>
         <?php
         $query = "SELECT id,name,project,labels,deadline FROM " . $_SESSION["username"] . "_tasks WHERE id=?;";
         if ($stmt = $mysqli->prepare($query)) {
@@ -36,9 +37,9 @@ require("TDLMenu.php");
                 ?>
                 <form action="TDLProcessTasks.php?action=updateTask" method="post">
                     <input type="hidden" name="id" value="<?php echo $id; ?>" />
-                    <input type="text" name="task" value="<?php echo trim($str); ?>"/>
-                    <input type="date" name="deadline" placeholder="dd. mm. yyyy" value="<?php echo date('j. m. Y', $deadline) ?>" />
-                    <input type="submit" value="Update task" />
+                    <input type="text" name="task" class="text-field" value="<?php echo trim($str); ?>"/>
+                    <input type="date" name="deadline" class="date-field" placeholder="dd. mm. yyyy" value="<?php echo date('j. m. Y', $deadline) ?>" />
+                    <input type="submit" class="submit-btn" value="Update task" />
                 </form>
             <?php
             endwhile;
