@@ -30,7 +30,11 @@ class TDLDeadline {
      */
     public function fromForm($rawDeadLine) {    	
         $rawDeadLine = trim($rawDeadLine);
-        if (preg_match("/\d:\d?\d tomorrow/", $rawDeadLine)) {
+        if (preg_match("/\d:\d?\d today/", $rawDeadLine)) {
+            $this->today($rawDeadLine, true);
+        } else if (preg_match("/today/", $rawDeadLine)) {
+            $this->today($rawDeadLine);
+        } else if (preg_match("/\d:\d?\d tomorrow/", $rawDeadLine)) {
             $this->tomorrow($rawDeadLine, true);
         } else if (preg_match("/tomorrow/", $rawDeadLine)) {
             $this->tomorrow($rawDeadLine);
@@ -93,6 +97,18 @@ class TDLDeadline {
         return $this->repeat;
     }
     
+    
+    private function today($rawDeadLine, $time = false) {
+        if ($time) {
+            $pieces = explode(" ", $rawDeadLine);
+            $subpieces = explode(":",$pieces[0]);
+            $this->deadline = mktime($subpieces[0], $subpieces[1]);
+        } else {
+            $this->deadline = mktime(23, 59, 59);
+        }
+    }
+
+
     /**
      * Special function for calculating tomorrow's deadline
      * 
@@ -211,8 +227,8 @@ class TDLDeadline {
         }
         $this->repeat = $rawDeadLine;
         $pieces = explode(" ", $rawDeadLine);
-        $diff = $this->getDayDifference(strtolower($pieces[1]), $base);
-        $nextNamedDay = date("j") + $diff;
+        $difference = $this->getDayDifference(strtolower($pieces[1]), $base);
+        $nextNamedDay = date("j", $base) + $difference;
         $this->makeRepeatDeadline($nextNamedDay, $pieces, $time);
     }
 
@@ -306,7 +322,7 @@ class TDLDeadline {
         } else {
             $diff = 0;
         }
-        $pos = 0;
+        $pos = 1;
         $found = false;
         $listOfDays = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
         foreach ($listOfDays as $day) {
@@ -316,7 +332,11 @@ class TDLDeadline {
             }
             $pos++;
         }
-        return abs($pos + date("N"))+$diff;
+        if (($pos - date("N")) >= 0) {          
+            return $pos - date("N") + $diff;
+        } else {
+            return 7 - abs($pos - date("N")) + $diff;
+        }
     }
     
     /**

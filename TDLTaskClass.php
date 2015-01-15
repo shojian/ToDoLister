@@ -64,7 +64,6 @@ class TDLTaskClass {
 
     private function testAndAddProjectLabels($project, $labels, $mysqli, $username) {
         $toAdd = array();
-        echo "bbb";
         if (strlen($project) > 0) {
             if ($stmt = $mysqli->prepare("SELECT * FROM " . $username . "_probels WHERE name=? AND type='project';")) {
                 $stmt->bind_param("s", $project);
