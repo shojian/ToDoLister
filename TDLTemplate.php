@@ -1,5 +1,7 @@
 <?php
 
+require_once("TDLTaskClass.php");
+
 /**
  * Class for parsing task/project templates
  */
@@ -40,7 +42,9 @@ class TDLTemplate {
             } else {
                 $this->type = "set of tasks";
             }
-            
+            for (strlen($this->projectName) >= 0 ? $i = 1: $i = 0; $i < count($splitLines); $i++) {
+                
+            }
         }
     }
     
