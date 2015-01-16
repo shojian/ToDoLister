@@ -50,15 +50,15 @@ Deadline styles
  
  ### Set of tasks
  
- &task_name #project_name @some_label !x
+ &task_name #project_name @some_label !x d-y
  
  example:
  
- &task_name #project_name @some_label !1
+ &task_name #project_name @some_label !1 d+0
  
- &task2 #project_name @some_label !2
+ &task2 #project_name @some_label !2 d+1
  
- &task3 #project_name @some_label !3
+ &task3 #project_name @some_label !3 d+2
  
  
  

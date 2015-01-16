@@ -21,7 +21,7 @@ class TDLTemplate {
      *
      * @var array
      */
-    private $listOfTasks;
+    private $listOfTasks = array();
     
     function __construct($template) {
         processTemplate($template);
@@ -43,7 +43,7 @@ class TDLTemplate {
                 $this->type = "set of tasks";
             }
             for (strlen($this->projectName) >= 0 ? $i = 1: $i = 0; $i < count($splitLines); $i++) {
-                
+                $this->listOfTasks[] = new TDLTaskClass($splitLines[$i]);
             }
         }
     }

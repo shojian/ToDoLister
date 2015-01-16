@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * File which holds task class
  */
 
@@ -13,8 +13,13 @@ class TDLTaskClass {
     private $labels;
     private $deadline;
     private $repeat;
-
-    function __construct($rawToProcess, $rawDeadLine) {
+    
+    /**
+     * 
+     * @param String $rawToProcess
+     * @param String $rawDeadLine optional
+     */
+    function __construct($rawToProcess, $rawDeadLine = "") {
         $toProcess = explode(" ", $rawToProcess);
         $project = "";
         $labels = [];
@@ -28,17 +33,22 @@ class TDLTaskClass {
             } else if (strpos($toProcess[$i], "@") === 0) {
                 // project					
                 $project = substr($toProcess[$i], 1);
+            } else if (strpos($toProcess[$i], "d+") === 0) {
+                $this->deadline = $toProcess[$i];
+                $this->repeat = "";
             } else {
                 $taskName .= " " . $toProcess[$i];
             }
         }
-        $deadline = new TDLDeadline();
-        $deadline->fromForm($rawDeadLine);
+        if (strlen($rawDeadLine) > 0) {
+            $deadline = new TDLDeadline();
+            $deadline->fromForm($rawDeadLine);
+            $this->deadline = $deadline->getDeadline();
+            $this->repeat = $deadline->getRepeat();
+        }
         $this->taskName = $taskName;
         $this->project = $project;
-        $this->labels = $labels;
-        $this->deadline = $deadline->getDeadline();
-        $this->repeat = $deadline->getRepeat();
+        $this->labels = $labels;        
     }
 
     public function getTaskName() {
@@ -60,7 +70,12 @@ class TDLTaskClass {
     public function getRepeat() {
         return $this->repeat;
     }
-
+    
+    /**
+     * 
+     * @param MySQLi connection $mysqli
+     * @param String $username
+     */
     public function testAndAddProjectLabels($mysqli, $username) {
         $toAdd = array();
         if (strlen($this->project) > 0) {
