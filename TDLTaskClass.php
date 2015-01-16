@@ -14,7 +14,7 @@ class TDLTaskClass {
     private $deadline;
     private $repeat;
 
-    function __construct($rawToProcess, $rawDeadLine, $mysqli, $username) {
+    function __construct($rawToProcess, $rawDeadLine) {
         $toProcess = explode(" ", $rawToProcess);
         $project = "";
         $labels = [];
@@ -37,7 +37,6 @@ class TDLTaskClass {
         $this->taskName = $taskName;
         $this->project = $project;
         $this->labels = $labels;
-        $this->testAndAddProjectLabels($project, $labels, $mysqli, $username);
         $this->deadline = $deadline->getDeadline();
         $this->repeat = $deadline->getRepeat();
     }
@@ -62,22 +61,21 @@ class TDLTaskClass {
         return $this->repeat;
     }
 
-    private function testAndAddProjectLabels($project, $labels, $mysqli, $username) {
+    public function testAndAddProjectLabels($mysqli, $username) {
         $toAdd = array();
-        if (strlen($project) > 0) {
+        if (strlen($this->project) > 0) {
             if ($stmt = $mysqli->prepare("SELECT * FROM " . $username . "_probels WHERE name=? AND type='project';")) {
-                $stmt->bind_param("s", $project);
+                $stmt->bind_param("s", $this->project);
                 $stmt->execute();
                 $stmt->store_result();
                 if ($stmt->num_rows == 0) {
-                    $toAdd[] = array("project", $project);
+                    $toAdd[] = array("project", $this->project);
                 }
                 $stmt->free_result();
                 $stmt->close();
             }
         }
-        if (count($labels) > 0) {
-            foreach ($labels as $value) {
+            foreach ($this->labels as $value) {
                 if ($stmt = $mysqli->prepare("SELECT * FROM " . $username . "_probels WHERE name=? AND type='label';")) {
                     $stmt->bind_param("s", $value);
                     $stmt->execute();
@@ -88,8 +86,7 @@ class TDLTaskClass {
                     $stmt->free_result();
                     $stmt->close();
                 }
-            }
-        }
+            }        
         foreach ($toAdd as $value) {
             if ($stmt = $mysqli->prepare("INSERT INTO " . $username . "_probels (type, name) VALUES (?,?);")) {
                     $stmt->bind_param("ss", $value[0], $value[1]);
