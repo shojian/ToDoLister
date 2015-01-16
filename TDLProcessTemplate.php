@@ -19,14 +19,11 @@ if ($toBeRemoved == null) {
     $toBeRemoved = false;
 }
 if ($getAction == "add") {    
-    if ($stmt = $mysqli->prepare("INSERT INTO " . $_SESSION["username"] . "_templates (name, type, template) VALUES (?, ?, ?);")) {
-
-        $stmt->bind_param("sssis", $taskName, $project, $stmtLabels, $stmtDeadline, $stmtRepeat);
-        $taskName = $task->getTaskName();
-        $project = $task->getProject();
-        $stmtLabels = implode(",", $task->getLabels());
-        $stmtDeadline = $task->getDeadline();
-        $stmtRepeat = $task->getRepeat();
+    if ($stmt = $mysqli->prepare("INSERT INTO " . $_SESSION["username"] . "_templates (name, type, template) VALUES (?, ?, ?);")) {        
+        $stmt->bind_param("sssis", $templateName, $templateType, $template);
+        $templateName = filter_input(INPUT_POST, "task", FILTER_SANITIZE_STRING);
+        //$templateType = filter_input(INPUT_POST, );
+        $template = filter_input(INPUT_POST, "template", FILTER_SANITIZE_STRING);
         if ($stmt->execute()) {
             $stmt->close();
             $mysqli->close();

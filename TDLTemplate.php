@@ -24,7 +24,7 @@ class TDLTemplate {
     private $listOfTasks = array();
     
     function __construct($template) {
-        processTemplate($template);
+        $this->processTemplate($template);
     }
     /**
      * 
@@ -46,6 +46,14 @@ class TDLTemplate {
                 $this->listOfTasks[] = new TDLTaskClass($splitLines[$i]);
             }
         }
+    }
+    
+    /**
+     * 
+     * @return array<TDLTaskClass>
+     */
+    public function getListOfTasks() {
+        return $this->listOfTasks;
     }
     
 }
