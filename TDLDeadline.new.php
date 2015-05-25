@@ -2,9 +2,7 @@
 /**
 	This class creates a deadline timestamp from a string.
   */
-  
-  require_once('ITDLDeadlineNew.php');
-  class TDLDeadlineNew extends ITDLDeadlineNew {
+  class TDLDeadlineNew {
   
   	/**  	  
   	  *  @var int $deadline Variable which stores calculated deadline value
@@ -21,6 +19,8 @@
   	  *	@param string $rawString
   	  */
   	function __construct($rawString) {
-  	
+  		$trimmed = trim($rawString);
+  			
   	}
+  	
   }
